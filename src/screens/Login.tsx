@@ -107,12 +107,6 @@ export default function Login() {
               >
                 Forgot your password?
               </Link>
-              <div className="text-sm text-[#9DA2B3]">
-                Don't have an account?{' '}
-                <Link to="/signup" className="clbr-link">
-                  Sign up
-                </Link>
-              </div>
             </div>
           </form>
         </CardContent>

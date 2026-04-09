@@ -7,7 +7,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
 const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'noreply@org.clbr.com'
-const APP_URL = Deno.env.get('APP_URL') || 'https://org.clbr.com'
+const APP_URL = Deno.env.get('APP_URL') || Deno.env.get('SITE_URL') || 'https://org.clbr.com'
 const RESET_ALLOWLIST = (Deno.env.get('PASSWORD_RESET_REDIRECT_ALLOWLIST') || '')
   .split(',')
   .map((value) => value.trim())
@@ -98,6 +98,37 @@ function logEvent(event: string, details: Record<string, unknown>) {
   console.log(JSON.stringify({ event, ts: new Date().toISOString(), ...details }))
 }
 
+async function resolveOrganizationLogoUrl(
+  supabaseAdmin: ReturnType<typeof createClient>,
+  appUrl: string,
+  requestId: string
+): Promise<string> {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('organization_settings')
+      .select('logo_url')
+      .limit(1)
+      .maybeSingle<{ logo_url: string | null }>()
+
+    if (error) {
+      logEvent('password_reset_logo_lookup_failed', { requestId, error: error.message })
+      return `${appUrl}/images/clbr-lockup-white.svg`
+    }
+
+    const logoUrl = typeof data?.logo_url === 'string' ? data.logo_url.trim() : ''
+    if (logoUrl) {
+      return logoUrl
+    }
+  } catch (error) {
+    logEvent('password_reset_logo_lookup_failed', {
+      requestId,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    })
+  }
+
+  return `${appUrl}/images/clbr-lockup-white.svg`
+}
+
 serve(async (req) => {
   const requestId = crypto.randomUUID()
 
@@ -152,6 +183,9 @@ serve(async (req) => {
       return genericOkResponse()
     }
 
+    const normalizedAppUrl = APP_URL.replace(/\/+$/, '')
+    const logoUrl = await resolveOrganizationLogoUrl(supabaseAdmin, normalizedAppUrl, requestId)
+
     const emailHtml = `
       <!DOCTYPE html>
       <html>
@@ -160,6 +194,7 @@ serve(async (req) => {
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
             .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+            .header img { display: block; margin: 0 auto 16px; height: 48px; width: auto; }
             .content { background: #f9fafb; padding: 30px; border-radius: 0 0 8px 8px; }
             .button { display: inline-block; background: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 20px 0; font-weight: bold; }
             .info-box { background: white; padding: 20px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #667eea; }
@@ -170,6 +205,7 @@ serve(async (req) => {
         <body>
           <div class="container">
             <div class="header">
+              <img src="${logoUrl}" alt="Organization logo" width="60" height="47" />
               <h1>Reset your password</h1>
             </div>
             <div class="content">

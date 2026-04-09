@@ -11,7 +11,12 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: "CLBR Org Chart",
-  description: "CLBR organizational chart app"
+  description: "CLBR organizational chart app",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg"
+  }
 };
 
 export default function RootLayout({

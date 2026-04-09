@@ -62,7 +62,7 @@ export default function ResetPassword() {
 
   if (!ready) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+      <div className="clbr-page-wrap flex min-h-screen items-center justify-center p-4">
         <LoadingSquare />
       </div>
     )
@@ -70,18 +70,18 @@ export default function ResetPassword() {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-        <Card className="w-full max-w-md">
+      <div className="clbr-page-wrap flex min-h-screen items-center justify-center p-4">
+        <Card className="clbr-card w-full max-w-md">
           <CardContent className="pt-6">
-            <div className="flex items-center gap-2 p-3 bg-destructive/10 text-destructive rounded-lg mb-4">
-              <AlertCircle className="h-5 w-5 shrink-0" />
+            <div className="mb-4 flex items-start gap-2 rounded-[2px] border border-[rgba(64,66,77,0.55)] bg-[rgba(110,113,128,0.15)] p-3 text-[#D3D6E0]">
+              <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
               <p className="text-sm">This link is invalid or has expired. Request a new reset link.</p>
             </div>
             <Link to="/forgot-password">
-              <Button className="w-full">Request new reset link</Button>
+              <Button className="clbr-btn-secondary w-full">Request new reset link</Button>
             </Link>
             <div className="text-center mt-4">
-              <Link to="/login" className="text-sm text-muted-foreground hover:text-primary">
+              <Link to="/login" className="clbr-link text-sm">
                 Back to login
               </Link>
             </div>
@@ -93,15 +93,15 @@ export default function ResetPassword() {
 
   if (complete) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-        <Card className="w-full max-w-md">
+      <div className="clbr-page-wrap flex min-h-screen items-center justify-center p-4">
+        <Card className="clbr-card w-full max-w-md">
           <CardContent className="pt-6">
             <div className="text-center space-y-4">
-              <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                <CheckCircle2 className="h-8 w-8 text-green-600" />
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-[rgba(64,66,77,0.55)] bg-[rgba(30,30,36,0.7)]">
+                <CheckCircle2 className="h-8 w-8 text-[#D3D6E0]" />
               </div>
-              <h2 className="text-xl font-bold">Password updated</h2>
-              <p className="text-muted-foreground">Redirecting you to the dashboard...</p>
+              <h2 className="text-xl font-black uppercase tracking-[0.3px] text-[#F2F2F2]">Password Updated</h2>
+              <p className="text-sm text-[#9DA2B3]">Redirecting you to the dashboard...</p>
             </div>
           </CardContent>
         </Card>
@@ -110,28 +110,35 @@ export default function ResetPassword() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
+    <div className="clbr-page-wrap flex min-h-screen items-center justify-center p-4">
+      <Card className="clbr-card w-full max-w-md">
+        <CardHeader className="space-y-1">
+          <div className="flex justify-center pb-3">
+            <img
+              src="/images/clbr-lockup-white.svg"
+              alt="CLBR"
+              className="h-auto w-full max-w-[180px]"
+            />
+          </div>
           <div className="flex gap-2 mb-4">
-            <div className="h-2 flex-1 rounded-full bg-primary" />
+            <div className="h-2 flex-1 rounded-full bg-[#D3D6E0]" />
           </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
             <div className="text-center">
-              <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                <Lock className="h-8 w-8 text-primary" />
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-[rgba(64,66,77,0.55)] bg-[rgba(30,30,36,0.7)]">
+                <Lock className="h-8 w-8 text-[#D3D6E0]" />
               </div>
-              <h2 className="text-2xl font-bold mb-2">Set new password</h2>
-              <p className="text-muted-foreground">
+              <h2 className="mb-2 text-2xl font-black uppercase tracking-[0.3px] text-[#F2F2F2]">Set New Password</h2>
+              <p className="text-sm text-[#9DA2B3]">
                 Choose a secure password for future logins
               </p>
             </div>
 
             <form onSubmit={handleSetPassword} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="password">New password</Label>
+                <Label htmlFor="password" className="clbr-label">New Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -139,31 +146,33 @@ export default function ResetPassword() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   minLength={6}
+                  className="clbr-input"
                 />
-                <p className="text-xs text-muted-foreground">At least 6 characters</p>
+                <p className="text-xs text-[#9DA2B3]">At least 6 characters</p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm password</Label>
+                <Label htmlFor="confirmPassword" className="clbr-label">Confirm Password</Label>
                 <Input
                   id="confirmPassword"
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm your password"
+                  className="clbr-input"
                 />
               </div>
 
               {error && (
-                <div className="flex items-center gap-2 p-3 bg-destructive/10 text-destructive rounded-lg">
-                  <AlertCircle className="h-4 w-4 shrink-0" />
+                <div className="flex items-start gap-2 rounded-[2px] border border-[rgba(64,66,77,0.55)] bg-[rgba(110,113,128,0.15)] p-3 text-[#D3D6E0]">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
                   <p className="text-sm">{error}</p>
                 </div>
               )}
 
               <Button
                 type="submit"
-                className="w-full"
+                className="clbr-btn-primary w-full"
                 disabled={loading || !password || !confirmPassword}
               >
                 {loading ? 'Updating...' : 'Update password'}
@@ -171,7 +180,7 @@ export default function ResetPassword() {
             </form>
 
             <div className="text-center">
-              <Link to="/login" className="text-sm text-muted-foreground hover:text-primary">
+              <Link to="/login" className="clbr-link text-sm">
                 Back to login
               </Link>
             </div>

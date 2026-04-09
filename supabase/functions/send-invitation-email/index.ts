@@ -84,6 +84,37 @@ function logEvent(event: string, details: Record<string, unknown>) {
   console.log(JSON.stringify({ event, ts: new Date().toISOString(), ...details }))
 }
 
+async function resolveOrganizationLogoUrl(
+  supabaseAdmin: ReturnType<typeof createClient>,
+  appUrl: string,
+  requestId: string
+): Promise<string> {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('organization_settings')
+      .select('logo_url')
+      .limit(1)
+      .maybeSingle<{ logo_url: string | null }>()
+
+    if (error) {
+      logEvent('invite_logo_lookup_failed', { requestId, error: error.message })
+      return `${appUrl}/images/clbr-lockup-white.svg`
+    }
+
+    const logoUrl = typeof data?.logo_url === 'string' ? data.logo_url.trim() : ''
+    if (logoUrl) {
+      return logoUrl
+    }
+  } catch (error) {
+    logEvent('invite_logo_lookup_failed', {
+      requestId,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    })
+  }
+
+  return `${appUrl}/images/clbr-lockup-white.svg`
+}
+
 serve(async (req) => {
   const requestId = crypto.randomUUID()
 
@@ -189,11 +220,8 @@ serve(async (req) => {
 
     const invitedBy = requester.full_name || 'Administrator'
 
-    // Use a hosted PNG logo for email client compatibility.
-    // Gmail and most email clients block data: URIs and don't support SVG.
-    // The white PNG version should be hosted at this URL.
     const appUrl = resolveAppUrl()
-    const logoUrl = `${appUrl}/images/logo-white.png`
+    const logoUrl = await resolveOrganizationLogoUrl(supabaseAdmin, appUrl, requestId)
 
     // Send email via Resend
     const emailHtml = `
@@ -216,7 +244,7 @@ serve(async (req) => {
         <body>
           <div class="container">
             <div class="header">
-              <img src="${logoUrl}" alt="CLBR" width="60" height="47" />
+              <img src="${logoUrl}" alt="Organization logo" width="60" height="47" />
               <h1>You've been invited to CLBR Org Chart</h1>
             </div>
             <div class="content">
