@@ -91,9 +91,13 @@ export function UserManagement() {
             )}
 
             {visibleProfiles.map((profile) => {
-                const hasLoggedIn = authStatusMap ? hasUserLoggedIn(profile.id, authStatusMap) : true
+                const hasLoggedIn = authStatusMap
+                  ? hasUserLoggedIn(profile.id, authStatusMap)
+                  : Boolean(profile.has_logged_in || profile.last_sign_in_at || profile.onboarding_completed)
                 const isResending = resendingUserId === profile.id
                 const isTerminated = (profile.employment_status ?? 'active') === 'terminated'
+                const hasCompletedOnboarding = Boolean(profile.onboarding_completed)
+                const showPendingInvite = !isTerminated && !hasLoggedIn && !hasCompletedOnboarding
 
                 return (
                   <div
@@ -125,7 +129,7 @@ export function UserManagement() {
                               Manager
                             </Badge>
                           )}
-                          {!hasLoggedIn && (
+                          {showPendingInvite && (
                             <Badge variant="outline" className="clbr-badge-soft clbr-status-pending">
                               <Clock className="h-3 w-3 mr-1" />
                               Pending
@@ -150,7 +154,7 @@ export function UserManagement() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      {!isTerminated && !hasLoggedIn && (
+                      {showPendingInvite && (
                         <Button
                           variant="outline"
                           size="sm"

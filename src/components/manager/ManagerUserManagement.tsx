@@ -252,8 +252,12 @@ export function ManagerUserManagement() {
           ) : (
             <div className="space-y-2">
               {teamMembers.map((profile) => {
-                const hasLoggedIn = authStatusMap ? hasUserLoggedIn(profile.id, authStatusMap) : true
+                const hasLoggedIn = authStatusMap
+                  ? hasUserLoggedIn(profile.id, authStatusMap)
+                  : Boolean(profile.has_logged_in || profile.last_sign_in_at || profile.onboarding_completed)
                 const isResending = resendingUserId === profile.id
+                const hasCompletedOnboarding = Boolean(profile.onboarding_completed)
+                const showPendingInvite = !hasLoggedIn && !hasCompletedOnboarding
 
                 return (
                   <div
@@ -273,7 +277,7 @@ export function ManagerUserManagement() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <p className="truncate font-bold text-[#F2F2F2]">{profile.full_name}</p>
-                          {!hasLoggedIn && (
+                          {showPendingInvite && (
                             <Badge variant="outline" className="clbr-badge-soft clbr-status-pending">
                               <Clock className="h-3 w-3 mr-1" />
                               Pending
@@ -293,7 +297,7 @@ export function ManagerUserManagement() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      {!hasLoggedIn && (
+                      {showPendingInvite && (
                         <Button
                           variant="outline"
                           size="sm"

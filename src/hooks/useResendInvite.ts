@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
 import { supabase } from '../lib/supabase'
 import { sendEmployeeInvitationEmail } from '../lib/notifications'
+import { invokeAdminUserOps } from '../lib/adminUserOps'
 import type { Profile } from '../types'
 import { useAuth } from './useAuth'
 
@@ -14,6 +15,19 @@ interface ProfileAuthStatusRow {
   id: string
   has_logged_in: boolean | null
   last_sign_in_at: string | null
+}
+
+interface ProfileOnboardingRow {
+  id: string
+  onboarding_completed: boolean | null
+}
+
+interface ListUsersResponse {
+  success?: boolean
+  users?: Array<{
+    id: string
+    last_sign_in_at: string | null
+  }>
 }
 
 export type UserAuthStatusMap = Record<string, boolean>
@@ -66,7 +80,7 @@ export function useResendInvite() {
 }
 
 /**
- * Hook to get auth status from profiles mirror columns.
+ * Hook to get auth status from admin listUsers (with profile fallbacks).
  * Returns a map of userId -> hasLoggedIn boolean.
  */
 export function useUserAuthStatus() {
@@ -78,6 +92,38 @@ export function useUserAuthStatus() {
       if (!currentUser) {
         console.warn('useUserAuthStatus: Not authenticated')
         return {}
+      }
+
+      try {
+        const { data, error } = await invokeAdminUserOps<ListUsersResponse>({
+          action: 'listUsers',
+          userId: currentUser.id,
+        })
+
+        if (!error && data?.success && Array.isArray(data.users)) {
+          const authStatusMap: UserAuthStatusMap = {}
+          for (const row of data.users) {
+            authStatusMap[row.id] = Boolean(row.last_sign_in_at)
+          }
+
+          console.log(
+            'useUserAuthStatus: Fetched auth status from admin listUsers for',
+            data.users.length,
+            'users'
+          )
+          return authStatusMap
+        }
+
+        if (error) {
+          console.warn(
+            'useUserAuthStatus: admin listUsers failed, falling back to profiles mirror columns:',
+            error.message
+          )
+        } else {
+          console.warn('useUserAuthStatus: admin listUsers returned unexpected payload, using fallback')
+        }
+      } catch (error) {
+        console.warn('useUserAuthStatus: Unexpected listUsers error, using fallback:', error)
       }
 
       try {
@@ -94,7 +140,32 @@ export function useUserAuthStatus() {
 
           if (mirrorColumnsMissing) {
             console.warn('useUserAuthStatus: login-status mirror columns not available yet')
-            return {}
+
+            const { data: onboardingData, error: onboardingError } = await supabase
+              .from('profiles')
+              .select('id, onboarding_completed')
+
+            if (onboardingError) {
+              console.error('useUserAuthStatus: Error fetching onboarding fallback status:', onboardingError)
+              return {}
+            }
+
+            if (!onboardingData) {
+              return {}
+            }
+
+            const authStatusMap: UserAuthStatusMap = {}
+            const rows = onboardingData as ProfileOnboardingRow[]
+            for (const row of rows) {
+              authStatusMap[row.id] = Boolean(row.onboarding_completed)
+            }
+
+            console.log(
+              'useUserAuthStatus: Fetched auth status from onboarding fallback for',
+              rows.length,
+              'users'
+            )
+            return authStatusMap
           }
 
           console.error('useUserAuthStatus: Error fetching profile auth status:', error)
@@ -124,12 +195,11 @@ export function useUserAuthStatus() {
 
 /**
  * Helper to check if a user has ever logged in.
- * Returns false only when the user is explicitly in the map as not logged in.
- * Returns true (benefit of the doubt) when the userId is absent from the map,
- * which can happen if the auth-status query failed or returned partial data —
- * better to hide a pending badge than to falsely show one.
+ * Returns false when the user is explicitly in the map as not logged in.
+ * Returns false (pending) when the userId is absent from the map to avoid
+ * hiding the pending badge and resend action when auth status is incomplete.
  */
 export function hasUserLoggedIn(userId: string, authStatusMap: UserAuthStatusMap): boolean {
-  if (!(userId in authStatusMap)) return true
+  if (!(userId in authStatusMap)) return false
   return authStatusMap[userId]
 }
