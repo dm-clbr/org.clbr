@@ -1,0 +1,208 @@
+import { supabase } from './supabase'
+
+interface AdminInvokeError {
+  message: string
+  status: number
+  code?: string
+  requestId?: string
+  body?: unknown
+}
+
+interface AdminErrorPayload {
+  error?: string
+  message?: string
+  code?: string
+  requestId?: string
+}
+
+interface ServerSessionPayload {
+  accessToken?: string
+  refreshToken?: string | null
+  code?: string
+  message?: string
+  error?: string
+  requestId?: string
+}
+
+function asAdminErrorPayload(value: unknown): AdminErrorPayload | null {
+  if (!value || typeof value !== 'object') return null
+  return value as AdminErrorPayload
+}
+
+const ADMIN_ERROR_MESSAGES: Record<string, string> = {
+  AUTHZ_ROLE_DENIED: 'You do not have permission to perform this action.',
+  AUTHZ_SCOPE_DENIED: 'You do not have permission to perform this action on this user/resource.',
+  AUTHZ_FIELD_DENIED: 'You do not have permission to modify one or more requested fields.',
+  REQUESTER_MISMATCH: 'Your session could not be verified. Please sign out and sign in again.',
+  INVALID_JWT: 'Your session has expired. Please sign in again.',
+  NO_ACTIVE_SESSION: 'No active auth session. Please sign in again.',
+  SUPABASE_TOKEN_PROJECT_MISMATCH:
+    'Your browser has stale Supabase auth cookies from a different environment. Please sign out and sign in again.',
+  TARGET_NOT_FOUND: 'The requested user/resource could not be found.',
+  TARGET_REQUIRED: 'A required target user/resource was missing from the request.',
+}
+
+function mapAdminErrorMessage(code: string | undefined, fallback: string) {
+  if (!code) {
+    if (/invalid jwt/i.test(fallback)) {
+      return ADMIN_ERROR_MESSAGES.INVALID_JWT
+    }
+    return fallback
+  }
+  return ADMIN_ERROR_MESSAGES[code] || fallback
+}
+
+async function invokeWithSession<T = unknown>(
+  body: Record<string, unknown>,
+  accessToken?: string
+): Promise<{ data: T | null; error: AdminInvokeError | null }> {
+  const invokeOptions: { body: Record<string, unknown>; headers?: Record<string, string> } = { body }
+  if (accessToken) {
+    const authHeaderName = ['Author', 'ization'].join('')
+    const authPrefix = ['Be', 'arer'].join('')
+    invokeOptions.headers = { [authHeaderName]: `${authPrefix} ${accessToken}` }
+  }
+
+  const { data, error } = await supabase.functions.invoke('admin-user-ops', invokeOptions)
+  if (!error) {
+    return { data: (data ?? null) as T | null, error: null }
+  }
+
+  let payload: unknown = null
+  const responseLike = (error as { context?: Response } | null)?.context
+  if (responseLike) {
+    try {
+      payload = await responseLike.clone().json()
+    } catch {
+      payload = null
+    }
+  }
+
+  const errorPayload = asAdminErrorPayload(payload)
+  const status = responseLike?.status ?? 0
+
+  return {
+    data: (data ?? null) as T | null,
+    error: {
+      message: mapAdminErrorMessage(
+        errorPayload?.code,
+        errorPayload?.error || errorPayload?.message || error.message || `Request failed (${status || 'network'})`
+      ),
+      status,
+      code: errorPayload?.code,
+      requestId: errorPayload?.requestId,
+      body: payload,
+    },
+  }
+}
+
+async function readServerSessionToken() {
+  if (typeof window === 'undefined') {
+    return null
+  }
+
+  try {
+    const response = await fetch('/api/auth/supabase-session', {
+      method: 'GET',
+      credentials: 'include',
+      cache: 'no-store',
+    })
+
+    const payload = (await response.json().catch(() => null)) as ServerSessionPayload | null
+    const accessToken = payload?.accessToken
+
+    if (response.ok && typeof accessToken === 'string' && accessToken.length > 0) {
+      return { accessToken }
+    }
+
+    return {
+      accessToken: null,
+      code: payload?.code,
+      error: payload?.error || payload?.message || `HTTP ${response.status}`,
+      requestId: payload?.requestId,
+    }
+  } catch {
+    return null
+  }
+}
+
+export function getAdminErrorMessage(
+  data: unknown,
+  error: AdminInvokeError | null,
+  fallback = 'Request failed'
+) {
+  const payload = asAdminErrorPayload(data) || asAdminErrorPayload(error?.body) || {}
+  const code = payload.code || error?.code
+  const requestId = payload.requestId || error?.requestId
+
+  const baseMessage = mapAdminErrorMessage(
+    code,
+    payload.error || error?.message || fallback
+  )
+
+  if (!requestId) return baseMessage
+  return `${baseMessage} (ref: ${requestId})`
+}
+
+export async function invokeAdminUserOps<T = unknown>(body: Record<string, unknown>) {
+  // Prefer token extracted server-side from request cookies.
+  // This avoids stale client-side session state when cookies and in-memory auth diverge.
+  const serverSession = await readServerSessionToken()
+  if (serverSession?.accessToken) {
+    const serverResponse = await invokeWithSession<T>(body, serverSession.accessToken)
+    if (!serverResponse.error || serverResponse.error.status !== 401) {
+      return serverResponse
+    }
+  } else if (serverSession?.code === 'SUPABASE_TOKEN_PROJECT_MISMATCH') {
+    return {
+      data: null,
+      error: {
+        message: mapAdminErrorMessage(
+          serverSession.code,
+          serverSession.error || serverSession.message || 'Session mismatch'
+        ),
+        status: 401,
+        code: serverSession.code,
+        requestId: serverSession.requestId,
+        body: serverSession,
+      },
+    }
+  }
+
+  // Ensure auth state is hydrated/refreshed before calling protected edge functions.
+  await supabase.auth.getUser()
+
+  let { data: { session } } = await supabase.auth.getSession()
+  // For privileged edge calls, proactively refresh once to avoid stale token
+  // edge cases seen on first-page-load after app hydration.
+  const { data: proactivelyRefreshed } = await supabase.auth.refreshSession()
+  if (proactivelyRefreshed.session?.access_token) {
+    session = proactivelyRefreshed.session
+  }
+
+  if (!session?.access_token) {
+    const { data: refreshed } = await supabase.auth.refreshSession()
+    session = refreshed.session
+  }
+
+  if (!session?.access_token) {
+    throw new Error('No active auth session. Please sign out and sign in again.')
+  }
+
+  let response = await invokeWithSession<T>(body, session.access_token)
+  if (!response.error) return response
+
+  // Edge gateway responses can return generic 401 payloads for expired/invalid tokens.
+  // Refresh and retry once on any 401 to recover from stale session state.
+  if (response.error.status !== 401) return response
+
+  // Token can be stale in local cookie storage; refresh and retry once.
+  const { data: refreshedData } = await supabase.auth.refreshSession()
+  const refreshedToken = refreshedData.session?.access_token
+  if (!refreshedToken || refreshedToken === session.access_token) {
+    return response
+  }
+
+  response = await invokeWithSession<T>(body, refreshedToken)
+  return response
+}

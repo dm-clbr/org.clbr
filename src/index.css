@@ -1,0 +1,409 @@
+@import "tailwindcss";
+
+/* ── PP Telegraf ── */
+@font-face {
+  font-family: 'PPTelegraf';
+  src: local('PP Telegraf'),
+       local('PPTelegraf'),
+       url('/font/Telegraf/PPTelegraf-Ultralight.woff2') format('woff2'),
+       url('/font/Telegraf/PPTelegraf-Ultralight.woff') format('woff'),
+       url('/font/Telegraf/PPTelegraf-Ultralight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PPTelegraf';
+  src: local('PP Telegraf'),
+       local('PPTelegraf'),
+       url('/font/Telegraf/PPTelegraf-Regular.woff2') format('woff2'),
+       url('/font/Telegraf/PPTelegraf-Regular.woff') format('woff'),
+       url('/font/Telegraf/PPTelegraf-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PPTelegraf';
+  src: local('PP Telegraf Bold'),
+       local('PPTelegraf-Bold'),
+       local('PP Telegraf'),
+       local('PPTelegraf'),
+       url('/font/Telegraf/PPTelegraf-Bold.woff2') format('woff2'),
+       url('/font/Telegraf/PPTelegraf-Bold.woff') format('woff'),
+       url('/font/Telegraf/PPTelegraf-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PPTelegraf';
+  src: local('PP Telegraf UltraBold'),
+       local('PPTelegraf-Ultrabold'),
+       local('PP Telegraf'),
+       local('PPTelegraf'),
+       url('/font/Telegraf/PPTelegraf-Ultrabold.woff2') format('woff2'),
+       url('/font/Telegraf/PPTelegraf-Ultrabold.woff') format('woff'),
+       url('/font/Telegraf/PPTelegraf-Ultrabold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PPTelegraf';
+  src: local('PP Telegraf Black'),
+       local('PPTelegraf-Black'),
+       local('PP Telegraf'),
+       local('PPTelegraf'),
+       url('/font/Telegraf/PPTelegraf-Black.woff2') format('woff2'),
+       url('/font/Telegraf/PPTelegraf-Black.woff') format('woff'),
+       url('/font/Telegraf/PPTelegraf-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: 'PPTelegraf', ui-sans-serif, system-ui, sans-serif;
+
+  /* Map shadcn CSS variables into Tailwind v4's theme token system.
+     Tailwind v4 requires --color-* tokens in @theme for utilities
+     like bg-primary, text-primary-foreground, etc. to generate correctly. */
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 0 0% 5.1%;
+  --foreground: 0 0% 93.3%;
+  --card: 0 0% 7.1%;
+  --card-foreground: 0 0% 93.3%;
+  --popover: 0 0% 6.7%;
+  --popover-foreground: 0 0% 93.3%;
+  --primary: 131.6 75.1% 48.8%;
+  --primary-foreground: 138.5 52% 4.9%;
+  --secondary: 0 0% 8.2%;
+  --secondary-foreground: 0 0% 93.3%;
+  --muted: 0 0% 10.2%;
+  --muted-foreground: 0 0% 63.1%;
+  --accent: 0 0% 11.8%;
+  --accent-foreground: 0 0% 93.3%;
+  --destructive: 359.3 100% 65.1%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 15.3%;
+  --input: 0 0% 13.7%;
+  --ring: 131.6 75.1% 48.8%;
+}
+
+body {
+  font-family: 'PPTelegraf', ui-sans-serif, system-ui, sans-serif;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Job Description rich text editor */
+.job-description-editor .tiptap,
+.job-description-editor .ProseMirror {
+  outline: none;
+  min-height: inherit;
+  height: 100%;
+}
+
+.job-description-editor .ProseMirror ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+  margin: 0.25rem 0;
+}
+
+.job-description-editor .ProseMirror ol {
+  list-style-type: decimal;
+  padding-left: 1.25rem;
+  margin: 0.25rem 0;
+}
+
+.job-description-editor .ProseMirror li {
+  margin: 0.125rem 0;
+}
+
+.job-description-editor .ProseMirror li > p {
+  margin: 0;
+}
+
+.job-description-editor .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: hsl(var(--muted-foreground));
+  pointer-events: none;
+  float: left;
+  height: 0;
+}
+
+/* Job Description rendered HTML (read-only display) */
+.job-description-content ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+  margin: 0.25rem 0;
+}
+
+.job-description-content ol {
+  list-style-type: decimal;
+  padding-left: 1.25rem;
+  margin: 0.25rem 0;
+}
+
+.job-description-content li {
+  margin: 0.125rem 0;
+}
+
+/* Employee shell side-nav */
+.org-layout-shell {
+  --org-bg: hsl(var(--background));
+
+  background: var(--org-bg);
+  display: flex;
+  min-height: 100vh;
+}
+
+/* App-wide dark mode overrides for remaining hardcoded light utilities. */
+.dark {
+  color-scheme: dark;
+}
+
+.dark .bg-white {
+  background-color: hsl(var(--card)) !important;
+}
+
+.dark .bg-white\/80 {
+  background-color: hsl(var(--card) / 0.8) !important;
+}
+
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-gray-300,
+.dark .border-gray-400 {
+  border-color: hsl(var(--border)) !important;
+}
+
+.dark .text-gray-900,
+.dark .text-gray-800 {
+  color: hsl(var(--foreground)) !important;
+}
+
+.dark .text-gray-600,
+.dark .text-gray-400 {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.dark .bg-gray-50,
+.dark .bg-gray-100 {
+  background-color: hsl(var(--muted)) !important;
+}
+
+.dark .hover\:bg-gray-100:hover {
+  background-color: hsl(var(--accent)) !important;
+}
+
+.dark .hover\:border-gray-300:hover,
+.dark .hover\:border-gray-400:hover {
+  border-color: hsl(var(--ring)) !important;
+}
+
+.dark .hover\:text-gray-900:hover {
+  color: hsl(var(--foreground)) !important;
+}
+
+.dark .from-blue-50,
+.dark .from-slate-50 {
+  --tw-gradient-from: hsl(var(--background)) var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: hsl(var(--background) / 0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+
+.dark .to-indigo-100,
+.dark .to-blue-50 {
+  --tw-gradient-to: hsl(var(--muted)) var(--tw-gradient-to-position) !important;
+}
+
+.dark .bg-green-50 {
+  background-color: rgb(31 218 67 / 0.14) !important;
+}
+
+.dark .bg-green-100 {
+  background-color: rgb(31 218 67 / 0.22) !important;
+}
+
+.dark .border-green-200 {
+  border-color: rgb(31 218 67 / 0.42) !important;
+}
+
+.dark .text-green-900,
+.dark .text-green-800 {
+  color: rgb(199 255 213) !important;
+}
+
+.dark .text-green-600 {
+  color: rgb(31 218 67) !important;
+}
+
+.dark .bg-amber-50 {
+  background-color: rgb(120 53 15 / 0.45) !important;
+}
+
+.dark .bg-amber-100 {
+  background-color: rgb(146 64 14 / 0.45) !important;
+}
+
+.dark .text-amber-700 {
+  color: rgb(253 230 138) !important;
+}
+
+.dark .border-amber-200,
+.dark .border-amber-300 {
+  border-color: rgb(251 191 36 / 0.55) !important;
+}
+
+.dark .org-layout-shell > aside {
+  background: hsl(var(--card)) !important;
+  border-right-color: hsl(var(--border)) !important;
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.dark .org-layout-shell > aside [class*="collapseToggle"] {
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.dark .org-layout-shell > aside [class*="collapseToggle"]:hover {
+  background: hsl(var(--accent)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.dark .org-layout-shell > aside [class*="navItem"],
+.dark .org-layout-shell > aside [class*="utilityItem"],
+.dark .org-layout-shell > aside [class*="mobileTabLink"],
+.dark .org-layout-shell > aside [class*="mobileTabButton"],
+.dark .org-layout-shell > aside [class*="mobileMenuItem"] {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.dark .org-layout-shell > aside [class*="navItem"][class*="active"],
+.dark .org-layout-shell > aside [class*="utilityItem"][class*="active"],
+.dark .org-layout-shell > aside [class*="mobileTabActive"],
+.dark .org-layout-shell > aside [class*="mobileMenuItemActive"] {
+  background: radial-gradient(
+    circle at right center,
+    rgb(31 218 67 / 0.16),
+    rgb(0 0 0 / 0) 74%
+  ) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.dark .org-layout-shell > aside [class*="navItem"][class*="active"]::after {
+  background: linear-gradient(180deg, rgb(106 255 139) 0%, rgb(31 218 67) 100%) !important;
+  box-shadow: 0 0 12px rgb(31 218 67 / 0.5) !important;
+}
+
+.dark .org-layout-shell > aside [class*="mobileTabBar"] {
+  background: hsl(var(--card)) !important;
+  border-top-color: hsl(var(--border)) !important;
+}
+
+.dark .org-layout-shell > aside [class*="mobileMenuOverlay"] {
+  background: rgb(2 6 23 / 0.72) !important;
+}
+
+.dark .org-layout-shell > aside [class*="mobileMenuSheet"] {
+  background: hsl(var(--card)) !important;
+}
+
+.dark .org-layout-shell > aside [class*="mobileMenuHeader"] {
+  border-bottom-color: hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.dark .org-layout-shell > aside [class*="profileCopy"] small {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.dark .org-layout-shell > aside [class*="navIcon"] img,
+.dark .org-layout-shell > aside [class*="mobileTabIcon"] img,
+.dark .org-layout-shell > aside [class*="mobileMenuItemIcon"] img {
+  filter: grayscale(1) brightness(1.25) !important;
+  opacity: 0.82 !important;
+}
+
+.dark .org-layout-shell > aside [class*="active"] [class*="navIcon"] img,
+.dark .org-layout-shell > aside [class*="mobileTabActive"] [class*="mobileTabIcon"] img,
+.dark .org-layout-shell > aside [class*="mobileMenuItemActive"] [class*="mobileMenuItemIcon"] img {
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+.org-workspace {
+  background: var(--org-bg);
+  flex: 1 1 auto;
+  min-height: 100vh;
+  min-width: 0;
+  overflow: auto;
+}
+
+@media (max-width: 980px) {
+  .org-layout-shell {
+    flex-direction: column;
+  }
+
+  .org-workspace {
+    min-height: 0;
+  }
+}
