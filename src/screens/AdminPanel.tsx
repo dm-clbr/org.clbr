@@ -18,9 +18,11 @@ export default function AdminPanel() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="clbr-page-wrap">
+        <div className="clbr-page-content">
         <div className="flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <div className="animate-spin h-12 w-12 rounded-full border-b-2 border-[#D3D6E0]"></div>
+          </div>
         </div>
       </div>
     )
@@ -31,30 +33,31 @@ export default function AdminPanel() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <h1 className="text-3xl font-bold mb-6">Admin Panel</h1>
+    <div className="clbr-page-wrap">
+      <div className="clbr-page-content max-w-6xl">
+      <h1 className="clbr-page-title">Admin Panel</h1>
 
-      <div className="flex gap-2 mb-6 border-b">
+      <div className="mb-6 flex gap-2 border-b border-[rgba(64,66,77,0.4)] pb-3">
         <Button
-          variant={activeTab === 'users' ? 'default' : 'ghost'}
+          variant="ghost"
           onClick={() => setActiveTab('users')}
-          className="rounded-b-none"
+          className={activeTab === 'users' ? 'clbr-btn-secondary' : 'clbr-btn-minimal'}
         >
           <Users className="mr-2 h-4 w-4" />
           Users
         </Button>
         <Button
-          variant={activeTab === 'departments' ? 'default' : 'ghost'}
+          variant="ghost"
           onClick={() => setActiveTab('departments')}
-          className="rounded-b-none"
+          className={activeTab === 'departments' ? 'clbr-btn-secondary' : 'clbr-btn-minimal'}
         >
           <Building2 className="mr-2 h-4 w-4" />
           Departments
         </Button>
         <Button
-          variant={activeTab === 'branding' ? 'default' : 'ghost'}
+          variant="ghost"
           onClick={() => setActiveTab('branding')}
-          className="rounded-b-none"
+          className={activeTab === 'branding' ? 'clbr-btn-secondary' : 'clbr-btn-minimal'}
         >
           <Palette className="mr-2 h-4 w-4" />
           Branding
@@ -64,6 +67,7 @@ export default function AdminPanel() {
       {activeTab === 'users' && <UserManagement />}
       {activeTab === 'departments' && <DepartmentManager />}
       {activeTab === 'branding' && <LogoUpload />}
+      </div>
     </div>
   )
 }

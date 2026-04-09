@@ -101,10 +101,10 @@ export function CascadingDepartmentSelect({
     <div className="space-y-3">
       {levels.map(({ levelItems, selectedId }, index) => (
         <div key={index} className="space-y-1.5">
-          <Label htmlFor={`dept-level-${index}`} className="flex items-center gap-2">
+          <Label htmlFor={`dept-level-${index}`} className="clbr-label flex items-center gap-2">
             {levelLabel(index)}
             {index === 0 && autoFilledNote && (
-              <span className="text-xs text-muted-foreground font-normal">{autoFilledNote}</span>
+              <span className="text-xs font-normal normal-case tracking-normal text-[#9DA2B3]">{autoFilledNote}</span>
             )}
           </Label>
           <select
@@ -112,7 +112,7 @@ export function CascadingDepartmentSelect({
             value={selectedId}
             onChange={(e) => handleLevelChange(index, e.target.value)}
             disabled={disabled}
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            className="clbr-select flex h-10 w-full px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-50"
           >
             <option value="">
               {index === 0 ? 'No Department' : '— None (stay at parent level) —'}
@@ -126,7 +126,7 @@ export function CascadingDepartmentSelect({
         </div>
       ))}
       {autoFilledNote && (
-        <div className="flex items-start gap-2 text-xs text-muted-foreground">
+        <div className="flex items-start gap-2 text-xs text-[#9DA2B3]">
           <Info className="h-3 w-3 mt-0.5 flex-shrink-0" />
           <span>Department automatically set from manager. You can change it if needed.</span>
         </div>

@@ -76,17 +76,16 @@ function DeptRow({ node, isOver, isActive: _isActive, onEdit, onDelete, onToggle
       ref={ref}
       style={{ paddingLeft: `${depth * 24 + 4}px` }}
       className={cn(
-        'flex items-center gap-2 p-2 rounded-lg border transition-colors',
+        'clbr-list-item flex items-center gap-2 p-2 transition-colors',
         isDragging && 'opacity-30',
-        isDropTarget && !isDragging && 'bg-primary/5 border-primary/40 ring-1 ring-primary/30',
-        !isDropTarget && !isDragging && 'hover:bg-accent',
+        isDropTarget && !isDragging && 'bg-[rgba(64,66,77,0.3)] border-[rgba(188,191,204,0.55)] ring-1 ring-[#D3D6E0]/40',
       )}
     >
       {/* Collapse toggle */}
       <button
         type="button"
         onClick={() => hasChildren && onToggleCollapse(dept.id)}
-        className={cn('p-0.5 rounded text-muted-foreground', hasChildren ? 'hover:text-foreground' : 'invisible')}
+        className={cn('rounded-[2px] p-0.5 text-[#9DA2B3]', hasChildren ? 'hover:text-[#F2F2F2]' : 'invisible')}
       >
         {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
       </button>
@@ -94,7 +93,7 @@ function DeptRow({ node, isOver, isActive: _isActive, onEdit, onDelete, onToggle
       {/* Drag handle */}
       <button
         type="button"
-        className="cursor-grab touch-none text-muted-foreground hover:text-foreground p-0.5"
+        className="cursor-grab touch-none rounded-[2px] p-0.5 text-[#9DA2B3] hover:text-[#F2F2F2]"
         {...attributes}
         {...listeners}
       >
@@ -103,17 +102,20 @@ function DeptRow({ node, isOver, isActive: _isActive, onEdit, onDelete, onToggle
 
       {/* Department info */}
       <div className="flex items-center gap-2 flex-1 min-w-0">
-        <Badge style={{ backgroundColor: dept.color, color: 'white' }} className="shrink-0">
+        <Badge
+          style={{ backgroundColor: dept.color, color: '#F2F2F2' }}
+          className="shrink-0 rounded-[2px] border-0 px-2 py-1 text-[11px] font-bold uppercase tracking-[0.3px]"
+        >
           {dept.name}
         </Badge>
-        <span className="text-xs text-muted-foreground shrink-0">{getDeptLabel(depth)}</span>
+        <span className="shrink-0 text-[11px] font-semibold uppercase tracking-[0.3px] text-[#9DA2B3]">{getDeptLabel(depth)}</span>
         {dept.description && (
-          <span className="text-sm text-muted-foreground truncate">{dept.description}</span>
+          <span className="truncate text-sm text-[#BCBFCC]">{dept.description}</span>
         )}
       </div>
 
       {/* Edit button */}
-      <Button variant="ghost" size="icon" onClick={() => onEdit(dept)} className="shrink-0">
+      <Button variant="ghost" size="icon" onClick={() => onEdit(dept)} className="clbr-btn-minimal h-9 w-9 shrink-0 p-0">
         <Edit2 className="h-4 w-4" />
       </Button>
 
@@ -122,7 +124,7 @@ function DeptRow({ node, isOver, isActive: _isActive, onEdit, onDelete, onToggle
         variant="ghost"
         size="icon"
         onClick={() => onDelete(dept)}
-        className="shrink-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+        className="clbr-btn-minimal h-9 w-9 shrink-0 p-0 text-[#D3D6E0] hover:bg-[rgba(110,113,128,0.22)] hover:text-[#F2F2F2]"
       >
         <Trash2 className="h-4 w-4" />
       </Button>
@@ -139,8 +141,10 @@ function RootDropZone({ isActive }: { isActive: boolean }) {
     <div
       ref={setNodeRef}
       className={cn(
-        'flex items-center justify-center h-10 rounded-lg border-2 border-dashed text-sm transition-colors mb-2',
-        isOver ? 'border-primary bg-primary/5 text-primary' : 'border-muted-foreground/30 text-muted-foreground',
+        'mb-2 flex h-10 items-center justify-center rounded-[2px] border-2 border-dashed text-xs font-bold uppercase tracking-[0.3px] transition-colors',
+        isOver
+          ? 'border-[#D3D6E0] bg-[rgba(64,66,77,0.3)] text-[#F2F2F2]'
+          : 'border-[rgba(64,66,77,0.45)] text-[#9DA2B3]',
       )}
     >
       Drop here to make a root department
@@ -269,17 +273,17 @@ export function DepartmentManager() {
   }
 
   if (isLoading) {
-    return <div>Loading departments...</div>
+    return <div className="clbr-empty">Loading departments...</div>
   }
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="clbr-card">
         <CardHeader>
-          <CardTitle>
+          <CardTitle className="clbr-card-title">
             {isEditing ? (editingDept ? 'Edit Department' : 'Add Department') : 'Departments'}
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="clbr-card-description">
             {isEditing
               ? 'Configure department details and color coding'
               : 'Manage departments — drag a department onto another to nest it as a sub-department'}
@@ -289,40 +293,46 @@ export function DepartmentManager() {
           {isEditing ? (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Department Name *</Label>
+                <Label htmlFor="name" className="clbr-label">Department Name *</Label>
                 <Input
                   id="name"
                   value={formData.name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
                   required
                   placeholder="e.g., Engineering"
+                  className="clbr-input"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="color">Color *</Label>
+                <Label htmlFor="color" className="clbr-label">Color *</Label>
                 <div className="flex gap-2 items-center">
                   <Input
                     id="color"
                     type="color"
                     value={formData.color}
                     onChange={(e) => setFormData((prev) => ({ ...prev, color: e.target.value }))}
-                    className="w-20 h-10"
+                    className="clbr-input h-10 w-20"
                     required
                   />
-                  <Badge style={{ backgroundColor: formData.color, color: 'white' }}>Preview</Badge>
+                  <Badge
+                    style={{ backgroundColor: formData.color, color: '#F2F2F2' }}
+                    className="rounded-[2px] border-0 px-2 py-1 text-[11px] font-bold uppercase tracking-[0.3px]"
+                  >
+                    Preview
+                  </Badge>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="parent">Parent Department</Label>
+                <Label htmlFor="parent" className="clbr-label">Parent Department</Label>
                 <select
                   id="parent"
                   value={formData.parent_id ?? ''}
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, parent_id: e.target.value || null }))
                   }
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="clbr-select flex h-10 w-full px-3 py-2 text-sm"
                 >
                   <option value="">None (root department)</option>
                   {parentOptions.map((dept) => (
@@ -334,13 +344,14 @@ export function DepartmentManager() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description" className="clbr-label">Description</Label>
                 <Textarea
                   id="description"
                   value={formData.description}
                   onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
                   placeholder="Optional description"
                   rows={3}
+                  className="clbr-textarea"
                 />
               </div>
 
@@ -348,20 +359,21 @@ export function DepartmentManager() {
                 <Button
                   type="submit"
                   disabled={createDepartment.isPending || updateDepartment.isPending}
+                  className="clbr-btn-primary"
                 >
                   {(createDepartment.isPending || updateDepartment.isPending) && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
                   {editingDept ? 'Update' : 'Create'}
                 </Button>
-                <Button type="button" variant="outline" onClick={handleCancel}>
+                <Button type="button" variant="outline" onClick={handleCancel} className="clbr-btn-secondary">
                   Cancel
                 </Button>
               </div>
             </form>
           ) : (
             <div className="space-y-4">
-              <Button onClick={() => setIsEditing(true)}>
+              <Button onClick={() => setIsEditing(true)} className="clbr-btn-secondary">
                 <Plus className="mr-2 h-4 w-4" />
                 Add Department
               </Button>
@@ -392,7 +404,7 @@ export function DepartmentManager() {
                     )
                   })}
                   {flatNodes.length === 0 && (
-                    <p className="text-sm text-muted-foreground text-center py-4">
+                    <p className="clbr-empty py-4">
                       No departments yet. Add one above.
                     </p>
                   )}
@@ -400,9 +412,12 @@ export function DepartmentManager() {
 
                 <DragOverlay>
                   {activeDept && (
-                    <div className="flex items-center gap-2 p-2 rounded-lg border bg-background shadow-lg opacity-90">
-                      <GripVertical className="h-4 w-4 text-muted-foreground" />
-                      <Badge style={{ backgroundColor: activeDept.color, color: 'white' }}>
+                    <div className="clbr-list-item flex items-center gap-2 p-2 opacity-90 shadow-lg">
+                      <GripVertical className="h-4 w-4 text-[#9DA2B3]" />
+                      <Badge
+                        style={{ backgroundColor: activeDept.color, color: '#F2F2F2' }}
+                        className="rounded-[2px] border-0 px-2 py-1 text-[11px] font-bold uppercase tracking-[0.3px]"
+                      >
                         {activeDept.name}
                       </Badge>
                     </div>
@@ -416,20 +431,25 @@ export function DepartmentManager() {
 
       {/* Delete confirmation dialog */}
       {deletingDept && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-background rounded-lg border shadow-lg p-6 w-full max-w-sm space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+          <div className="clbr-card w-full max-w-sm space-y-4 p-6">
             <div className="space-y-1">
-              <h3 className="font-semibold text-lg">Delete department?</h3>
-              <p className="text-sm text-muted-foreground">
-                <span className="font-medium text-foreground">{deletingDept.name}</span> will be
+              <h3 className="text-lg font-bold uppercase tracking-[0.3px] text-[#F2F2F2]">Delete department?</h3>
+              <p className="text-sm text-[#9DA2B3]">
+                <span className="font-medium text-[#F2F2F2]">{deletingDept.name}</span> will be
                 permanently deleted. Any child departments will be moved to the root level.
               </p>
             </div>
             <div className="flex gap-2 justify-end">
-              <Button variant="outline" onClick={() => setDeletingDept(null)} disabled={deleteDepartment.isPending}>
+              <Button variant="outline" onClick={() => setDeletingDept(null)} disabled={deleteDepartment.isPending} className="clbr-btn-secondary">
                 Cancel
               </Button>
-              <Button variant="destructive" onClick={handleDeleteConfirm} disabled={deleteDepartment.isPending}>
+              <Button
+                variant="destructive"
+                onClick={handleDeleteConfirm}
+                disabled={deleteDepartment.isPending}
+                className="clbr-btn-secondary !bg-[#6E7180] hover:!bg-[#40424D]"
+              >
                 {deleteDepartment.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Delete
               </Button>

@@ -39,21 +39,21 @@ export function UserManagement() {
   }
 
   if (isLoading) {
-    return <div>Loading users...</div>
+    return <div className="clbr-empty">Loading users...</div>
   }
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="clbr-card">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>User Management</CardTitle>
-              <CardDescription>
+              <CardTitle className="clbr-card-title">User Management</CardTitle>
+              <CardDescription className="clbr-card-description">
                 Manage active employees and archived terminations
               </CardDescription>
             </div>
-            <Button onClick={() => setShowInviteDialog(true)}>
+            <Button onClick={() => setShowInviteDialog(true)} className="clbr-btn-secondary">
               <UserPlus className="mr-2 h-4 w-4" />
               Invite Employee
             </Button>
@@ -64,16 +64,18 @@ export function UserManagement() {
             <Button
               type="button"
               size="sm"
-              variant={statusView === 'active' ? 'default' : 'outline'}
+              variant="outline"
               onClick={() => setStatusView('active')}
+              className={statusView === 'active' ? 'clbr-btn-secondary' : 'clbr-btn-minimal'}
             >
               Active ({activeProfiles.length})
             </Button>
             <Button
               type="button"
               size="sm"
-              variant={statusView === 'terminated' ? 'default' : 'outline'}
+              variant="outline"
               onClick={() => setStatusView('terminated')}
+              className={statusView === 'terminated' ? 'clbr-btn-secondary' : 'clbr-btn-minimal'}
             >
               Archived ({terminatedProfiles.length})
             </Button>
@@ -81,7 +83,7 @@ export function UserManagement() {
 
           <div className="space-y-2">
             {visibleProfiles.length === 0 && (
-              <div className="text-sm text-muted-foreground p-4 border rounded-lg">
+              <div className="clbr-empty">
                 {statusView === 'active'
                   ? 'No active employees found.'
                   : 'No archived employees found.'}
@@ -96,48 +98,50 @@ export function UserManagement() {
                 return (
                   <div
                     key={profile.id}
-                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-accent transition-colors"
+                    className="clbr-list-item flex items-center justify-between p-3"
                   >
                     <div className="flex items-center gap-3 flex-1">
-                      <Avatar>
+                      <Avatar className="h-10 w-10 bg-gradient-to-b from-[#5C5C5C] to-[#1F1F1F]">
                         {profile.profile_photo_url && (
                           <AvatarImage src={profile.profile_photo_url} alt={profile.full_name} />
                         )}
-                        <AvatarFallback>{getInitials(profile.full_name)}</AvatarFallback>
+                        <AvatarFallback className="bg-transparent text-[#F2F2F2] text-[11px] font-bold uppercase tracking-[0.3px]">
+                          {getInitials(profile.full_name)}
+                        </AvatarFallback>
                       </Avatar>
                       
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className="font-medium truncate">{profile.full_name}</p>
+                          <p className="truncate font-bold text-[#F2F2F2]">{profile.full_name}</p>
                           {profile.is_admin && (
-                            <Badge variant="secondary">
+                            <Badge variant="secondary" className="clbr-badge-soft bg-[rgba(64,66,77,0.24)]">
                               <Shield className="h-3 w-3 mr-1" />
                               Admin
                             </Badge>
                           )}
                           {profile.is_manager && (
-                            <Badge variant="secondary" className="bg-blue-100 text-blue-800 hover:bg-blue-200">
+                            <Badge variant="secondary" className="clbr-badge-soft bg-[rgba(64,66,77,0.24)]">
                               <Users className="h-3 w-3 mr-1" />
                               Manager
                             </Badge>
                           )}
                           {!hasLoggedIn && (
-                            <Badge variant="outline" className="border-yellow-500 text-yellow-700">
+                            <Badge variant="outline" className="clbr-badge-soft clbr-status-pending">
                               <Clock className="h-3 w-3 mr-1" />
                               Pending
                             </Badge>
                           )}
                           {isTerminated && (
-                            <Badge variant="outline" className="border-destructive text-destructive">
+                            <Badge variant="outline" className="clbr-badge-soft clbr-status-archived">
                               Archived
                             </Badge>
                           )}
                         </div>
-                        <p className="text-sm text-muted-foreground truncate">{profile.job_title}</p>
+                        <p className="truncate text-sm text-[#9DA2B3]">{profile.job_title}</p>
                         {profile.department && (
                           <Badge
-                            className="mt-1"
-                            style={{ backgroundColor: profile.department.color, color: 'white' }}
+                            className="mt-1 rounded-[2px] border-0 px-2 py-1 text-[11px] font-bold uppercase tracking-[0.3px] text-[#F2F2F2]"
+                            style={{ backgroundColor: profile.department.color, color: '#F2F2F2' }}
                           >
                             {profile.department.name}
                           </Badge>
@@ -153,6 +157,7 @@ export function UserManagement() {
                           onClick={() => handleResendInvite(profile)}
                           disabled={isResending}
                           title="Resend invitation email"
+                          className="clbr-btn-secondary"
                         >
                           {isResending ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
@@ -171,6 +176,7 @@ export function UserManagement() {
                             size="icon"
                             onClick={() => setEditingUser(profile)}
                             title="Edit employee"
+                            className="clbr-btn-minimal h-9 w-9 p-0"
                           >
                             <Edit2 className="h-4 w-4" />
                           </Button>
@@ -179,7 +185,7 @@ export function UserManagement() {
                             size="icon"
                             onClick={() => setEmployeeToRemove(profile)}
                             title="Terminate employee"
-                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                            className="clbr-btn-minimal h-9 w-9 p-0 text-[#D3D6E0] hover:bg-[rgba(110,113,128,0.22)] hover:text-[#F2F2F2]"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>

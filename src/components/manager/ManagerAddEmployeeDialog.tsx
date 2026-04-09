@@ -35,6 +35,9 @@ export function ManagerAddEmployeeDialog({ open, onOpenChange }: ManagerAddEmplo
   const { data: currentManager } = useProfile()
   const { data: branchProfiles } = useProfileBranch(currentManager?.id)
   const { data: departments } = useDepartments()
+  const labelClass = 'clbr-label'
+  const inputClass = 'clbr-input'
+  const selectClass = 'clbr-select flex h-10 w-full px-3 py-2 text-sm'
 
   // Managers the current user can assign: themselves + any managers in their reporting chain
   const assignableManagers = [
@@ -167,24 +170,24 @@ export function ManagerAddEmployeeDialog({ open, onOpenChange }: ManagerAddEmplo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="w-full sm:max-w-[600px] rounded-[2px] border border-[rgba(64,66,77,0.55)] bg-[#131313] p-6 text-[#F2F2F2] shadow-[0_16px_36px_rgba(0,0,0,0.55)] opacity-100">
         <DialogHeader>
-          <DialogTitle>Invite Team Member</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="clbr-card-title">Invite Team Member</DialogTitle>
+          <DialogDescription className="text-[14px] font-normal normal-case tracking-normal text-[#9DA2B3]">
             Send an invitation email with a magic link to create their account and set up their password. They will be added to your team.
           </DialogDescription>
         </DialogHeader>
 
         {successMessage ? (
           <div className="flex flex-col items-center justify-center py-8 space-y-4">
-            <CheckCircle2 className="h-16 w-16 text-green-500" />
-            <p className="text-center text-lg font-medium text-green-700">{successMessage}</p>
+            <CheckCircle2 className="h-16 w-16 text-[#D3D6E0]" />
+            <p className="text-center text-lg font-medium text-[#F2F2F2]">{successMessage}</p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4 max-h-[60vh] overflow-y-auto">
+          <form onSubmit={handleSubmit} className="max-h-[60vh] space-y-4 overflow-y-auto pr-1">
             <div className="space-y-2">
-              <Label htmlFor="email">
-                Email Address <span className="text-destructive">*</span>
+              <Label htmlFor="email" className={labelClass}>
+                Email Address <span className="text-[#D3D6E0]">*</span>
               </Label>
               <Input
                 id="email"
@@ -193,16 +196,17 @@ export function ManagerAddEmployeeDialog({ open, onOpenChange }: ManagerAddEmplo
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={inviteEmployee.isPending}
+                className={inputClass}
               />
               {errors.email && (
-                <p className="text-sm text-destructive">{errors.email}</p>
+                <p className="text-sm text-[#D3D6E0]">{errors.email}</p>
               )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firstName">
-                  First Name <span className="text-destructive">*</span>
+                <Label htmlFor="firstName" className={labelClass}>
+                  First Name <span className="text-[#D3D6E0]">*</span>
                 </Label>
                 <Input
                   id="firstName"
@@ -211,15 +215,16 @@ export function ManagerAddEmployeeDialog({ open, onOpenChange }: ManagerAddEmplo
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   disabled={inviteEmployee.isPending}
+                  className={inputClass}
                 />
                 {errors.firstName && (
-                  <p className="text-sm text-destructive">{errors.firstName}</p>
+                  <p className="text-sm text-[#D3D6E0]">{errors.firstName}</p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="lastName">
-                  Last Name <span className="text-destructive">*</span>
+                <Label htmlFor="lastName" className={labelClass}>
+                  Last Name <span className="text-[#D3D6E0]">*</span>
                 </Label>
                 <Input
                   id="lastName"
@@ -228,16 +233,17 @@ export function ManagerAddEmployeeDialog({ open, onOpenChange }: ManagerAddEmplo
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   disabled={inviteEmployee.isPending}
+                  className={inputClass}
                 />
                 {errors.lastName && (
-                  <p className="text-sm text-destructive">{errors.lastName}</p>
+                  <p className="text-sm text-[#D3D6E0]">{errors.lastName}</p>
                 )}
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="jobTitle">
-                Job Title <span className="text-destructive">*</span>
+              <Label htmlFor="jobTitle" className={labelClass}>
+                Job Title <span className="text-[#D3D6E0]">*</span>
               </Label>
               <Input
                 id="jobTitle"
@@ -246,21 +252,22 @@ export function ManagerAddEmployeeDialog({ open, onOpenChange }: ManagerAddEmplo
                 value={jobTitle}
                 onChange={(e) => setJobTitle(e.target.value)}
                 disabled={inviteEmployee.isPending}
+                className={inputClass}
               />
               {errors.jobTitle && (
-                <p className="text-sm text-destructive">{errors.jobTitle}</p>
+                <p className="text-sm text-[#D3D6E0]">{errors.jobTitle}</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="manager">Manager</Label>
+              <Label htmlFor="manager" className={labelClass}>Manager</Label>
               {assignableManagers.length > 1 ? (
                 <select
                   id="manager"
                   value={managerId}
                   onChange={(e) => setManagerId(e.target.value)}
                   disabled={inviteEmployee.isPending}
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className={selectClass}
                 >
                   {assignableManagers.map((m) => (
                     <option key={m.id} value={m.id}>
@@ -274,10 +281,10 @@ export function ManagerAddEmployeeDialog({ open, onOpenChange }: ManagerAddEmplo
                   type="text"
                   value={currentManager.full_name}
                   disabled
-                  className="bg-muted cursor-not-allowed"
+                  className="clbr-input cursor-not-allowed"
                 />
               )}
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-[#9DA2B3]">
                 {assignableManagers.length > 1
                   ? 'Select the manager this person will report to. Only managers in your team are shown.'
                   : 'This team member will report directly to you.'}
@@ -285,10 +292,10 @@ export function ManagerAddEmployeeDialog({ open, onOpenChange }: ManagerAddEmplo
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="department">
+              <Label htmlFor="department" className={labelClass}>
                 Department
                 {departmentAutoFilled && (
-                  <span className="ml-2 text-xs text-muted-foreground">(auto-filled from your department)</span>
+                  <span className="ml-2 text-xs font-normal normal-case tracking-normal text-[#9DA2B3]">(auto-filled from your department)</span>
                 )}
               </Label>
               <select
@@ -296,7 +303,7 @@ export function ManagerAddEmployeeDialog({ open, onOpenChange }: ManagerAddEmplo
                 value={departmentId}
                 onChange={(e) => handleDepartmentChange(e.target.value)}
                 disabled={inviteEmployee.isPending}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className={selectClass}
               >
                 <option value="">No Department</option>
                 {departments?.map((dept) => (
@@ -306,7 +313,7 @@ export function ManagerAddEmployeeDialog({ open, onOpenChange }: ManagerAddEmplo
                 ))}
               </select>
               {departmentAutoFilled && (
-                <div className="flex items-start gap-2 text-xs text-muted-foreground">
+                <div className="flex items-start gap-2 text-xs text-[#9DA2B3]">
                   <Info className="h-3 w-3 mt-0.5 flex-shrink-0" />
                   <span>Department automatically set from your department. You can change it if needed.</span>
                 </div>
@@ -314,23 +321,24 @@ export function ManagerAddEmployeeDialog({ open, onOpenChange }: ManagerAddEmplo
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="startDate">Start Date</Label>
+              <Label htmlFor="startDate" className={labelClass}>Start Date</Label>
               <Input
                 id="startDate"
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
                 disabled={inviteEmployee.isPending}
+                className={inputClass}
               />
               {errors.startDate && (
-                <p className="text-sm text-destructive">{errors.startDate}</p>
+                <p className="text-sm text-[#D3D6E0]">{errors.startDate}</p>
               )}
             </div>
 
             {errors.submit && (
-              <div className="flex items-start gap-2 p-3 bg-destructive/10 border border-destructive/20 rounded-md">
-                <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-destructive">{errors.submit}</p>
+              <div className="flex items-start gap-2 rounded-[2px] border border-[rgba(64,66,77,0.55)] bg-[rgba(110,113,128,0.15)] p-3">
+                <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-[#D3D6E0]" />
+                <p className="text-sm text-[#D3D6E0]">{errors.submit}</p>
               </div>
             )}
 
@@ -338,7 +346,7 @@ export function ManagerAddEmployeeDialog({ open, onOpenChange }: ManagerAddEmplo
               <Button
                 type="submit"
                 disabled={inviteEmployee.isPending}
-                className="flex-1"
+                className="clbr-btn-primary flex-1"
               >
                 {inviteEmployee.isPending && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -350,6 +358,7 @@ export function ManagerAddEmployeeDialog({ open, onOpenChange }: ManagerAddEmplo
                 variant="outline"
                 onClick={handleCancel}
                 disabled={inviteEmployee.isPending}
+                className="clbr-btn-secondary"
               >
                 Cancel
               </Button>

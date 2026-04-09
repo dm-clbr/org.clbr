@@ -46,24 +46,31 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-      <Card className="w-full max-w-md">
+    <div className="clbr-page-wrap flex min-h-screen items-center justify-center p-4">
+      <Card className="clbr-card w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Sign in</CardTitle>
-          <CardDescription>
+          <div className="flex justify-center pb-3">
+            <img
+              src="/images/clbr-lockup-white.svg"
+              alt="CLBR"
+              className="h-auto w-full max-w-[180px]"
+            />
+          </div>
+          <CardTitle className="clbr-card-title">Sign In</CardTitle>
+          <CardDescription className="text-[14px] font-normal normal-case tracking-normal text-[#9DA2B3]">
             Enter your email and password to access your account
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md">
+              <div className="rounded-[2px] border border-[rgba(64,66,77,0.55)] bg-[rgba(110,113,128,0.15)] p-3 text-sm text-[#D3D6E0]">
                 {error}
               </div>
             )}
             
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="clbr-label">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -72,11 +79,12 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={loading}
+                className="clbr-input"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="clbr-label">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -84,23 +92,24 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={loading}
+                className="clbr-input"
               />
             </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="clbr-btn-primary w-full" disabled={loading}>
               {loading ? 'Signing in...' : 'Sign in'}
             </Button>
 
             <div className="text-center space-y-2">
               <Link
                 to="/forgot-password"
-                className="text-sm text-muted-foreground hover:text-primary"
+                className="clbr-link text-sm"
               >
                 Forgot your password?
               </Link>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-[#9DA2B3]">
                 Don't have an account?{' '}
-                <Link to="/signup" className="text-primary hover:underline">
+                <Link to="/signup" className="clbr-link">
                   Sign up
                 </Link>
               </div>

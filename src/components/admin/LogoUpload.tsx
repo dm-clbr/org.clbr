@@ -87,7 +87,7 @@ export function LogoUpload() {
 
   if (isLoading) {
     return (
-      <Card>
+      <Card className="clbr-card">
         <CardContent className="flex items-center justify-center py-8">
           <Loader2 className="h-6 w-6 animate-spin" />
         </CardContent>
@@ -98,23 +98,23 @@ export function LogoUpload() {
   const currentLogoUrl = preview || settings?.logo_url
 
   return (
-    <Card>
+    <Card className="clbr-card">
       <CardHeader>
-        <CardTitle>Organization Logo</CardTitle>
-        <CardDescription>
+        <CardTitle className="clbr-card-title">Organization Logo</CardTitle>
+        <CardDescription className="clbr-card-description">
           Upload a logo to replace the default "OrgChart" text in the header. This will be visible to all users.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {error && (
-          <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+          <div className="rounded-[2px] border border-[rgba(64,66,77,0.55)] bg-[rgba(110,113,128,0.15)] p-3 text-sm text-[#D3D6E0]">
             {error}
           </div>
         )}
 
         {/* Current Logo Preview */}
         {currentLogoUrl && (
-          <div className="flex items-center gap-4 p-4 border rounded-lg">
+          <div className="clbr-list-item flex items-center gap-4 p-4">
             <div className="flex-shrink-0">
               <img
                 src={currentLogoUrl}
@@ -123,8 +123,8 @@ export function LogoUpload() {
               />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-medium">Current Logo</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-sm font-bold uppercase tracking-[0.3px] text-[#F2F2F2]">Current Logo</p>
+              <p className="text-xs text-[#9DA2B3]">
                 This logo appears in the header for all users
               </p>
             </div>
@@ -134,6 +134,7 @@ export function LogoUpload() {
                 size="sm"
                 onClick={handleRemove}
                 disabled={uploading}
+                className="clbr-btn-secondary"
               >
                 <X className="h-4 w-4 mr-2" />
                 Remove
@@ -145,7 +146,7 @@ export function LogoUpload() {
         {/* Upload Section */}
         <div className="space-y-4">
           <div>
-            <Label htmlFor="logo-upload">Upload New Logo</Label>
+            <Label htmlFor="logo-upload" className="clbr-label">Upload New Logo</Label>
             <div className="mt-2 flex items-center gap-4">
               <input
                 ref={fileInputRef}
@@ -159,25 +160,26 @@ export function LogoUpload() {
                 variant="outline"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading}
+                className="clbr-btn-secondary"
               >
                 <ImageIcon className="h-4 w-4 mr-2" />
                 Choose File
               </Button>
               {fileInputRef.current?.files?.[0] && (
-                <span className="text-sm text-muted-foreground">
+                <span className="text-sm text-[#9DA2B3]">
                   {fileInputRef.current.files[0].name}
                 </span>
               )}
             </div>
-            <p className="text-xs text-muted-foreground mt-2">
+            <p className="mt-2 text-xs text-[#9DA2B3]">
               Supported formats: PNG, JPG, SVG. Max size: 5MB
             </p>
           </div>
 
           {/* Preview */}
           {preview && (
-            <div className="p-4 border rounded-lg bg-muted/50">
-              <p className="text-sm font-medium mb-2">Preview</p>
+            <div className="clbr-list-item p-4">
+              <p className="mb-2 text-sm font-bold uppercase tracking-[0.3px] text-[#F2F2F2]">Preview</p>
               <img
                 src={preview}
                 alt="Logo preview"
@@ -192,6 +194,7 @@ export function LogoUpload() {
               <Button
                 onClick={handleUpload}
                 disabled={uploading}
+                className="clbr-btn-primary"
               >
                 {uploading ? (
                   <>
@@ -214,6 +217,7 @@ export function LogoUpload() {
                   }
                 }}
                 disabled={uploading}
+                className="clbr-btn-secondary"
               >
                 Cancel
               </Button>

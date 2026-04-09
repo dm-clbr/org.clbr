@@ -26,9 +26,11 @@ export default function Profile() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="clbr-page-wrap">
+        <div className="clbr-page-content">
         <div className="flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <div className="animate-spin h-12 w-12 rounded-full border-b-2 border-[#D3D6E0]"></div>
+          </div>
         </div>
       </div>
     )
@@ -36,9 +38,11 @@ export default function Profile() {
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-destructive/10 text-destructive p-4 rounded-md">
+      <div className="clbr-page-wrap">
+        <div className="clbr-page-content">
+        <div className="rounded-[2px] border border-[rgba(64,66,77,0.55)] bg-[rgba(110,113,128,0.15)] p-4 text-[#D3D6E0]">
           Failed to load profile. Please try again.
+        </div>
         </div>
       </div>
     )
@@ -46,23 +50,32 @@ export default function Profile() {
 
   if (!profile) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-muted p-4 rounded-md">
+      <div className="clbr-page-wrap">
+        <div className="clbr-page-content">
+        <div className="clbr-empty">
           Profile not found.
+        </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="clbr-page-wrap">
+      <div className="clbr-page-content max-w-4xl">
       <div className="mb-6 flex items-center justify-between gap-4">
-        <h1 className="text-3xl font-bold">My Profile</h1>
-        <Button type="button" variant="link" onClick={handleSignOut} disabled={isSigningOut}>
+        <h1 className="clbr-page-title mb-0">My Profile</h1>
+        <Button
+          type="button"
+          className="clbr-btn-secondary"
+          onClick={handleSignOut}
+          disabled={isSigningOut}
+        >
           {isSigningOut ? 'Signing out...' : 'Logout'}
         </Button>
       </div>
       <ProfileEditor profile={profile} />
+      </div>
     </div>
   )
 }

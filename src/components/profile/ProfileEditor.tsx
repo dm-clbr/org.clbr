@@ -15,6 +15,9 @@ interface ProfileEditorProps {
 }
 
 export function ProfileEditor({ profile, onSaved }: ProfileEditorProps) {
+  const inputClass = 'clbr-input'
+  const labelClass = 'clbr-label'
+
   // Split full_name into first and last name for editing
   const nameParts = profile.full_name.split(' ')
   const defaultFirstName = nameParts[0] || ''
@@ -136,10 +139,10 @@ export function ProfileEditor({ profile, onSaved }: ProfileEditorProps) {
   }
 
   return (
-    <Card>
+    <Card className="clbr-card">
       <CardHeader>
-        <CardTitle>Profile Information</CardTitle>
-        <CardDescription>
+        <CardTitle className="clbr-card-title">Profile Information</CardTitle>
+        <CardDescription className="clbr-card-description">
           Update your profile information and social links
         </CardDescription>
       </CardHeader>
@@ -154,105 +157,113 @@ export function ProfileEditor({ profile, onSaved }: ProfileEditorProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name *</Label>
+              <Label htmlFor="firstName" className={labelClass}>First Name *</Label>
               <Input
                 id="firstName"
                 value={formData.firstName}
                 onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
                 placeholder="John"
                 required
+                className={inputClass}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name *</Label>
+              <Label htmlFor="lastName" className={labelClass}>Last Name *</Label>
               <Input
                 id="lastName"
                 value={formData.lastName}
                 onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
                 placeholder="Doe"
                 required
+                className={inputClass}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="preferred_name">Nickname / Preferred Name</Label>
+              <Label htmlFor="preferred_name" className={labelClass}>Nickname / Preferred Name</Label>
               <Input
                 id="preferred_name"
                 value={formData.preferred_name}
                 onChange={(e) => setFormData(prev => ({ ...prev, preferred_name: e.target.value }))}
                 placeholder="Optional - how you'd like to be called"
+                className={inputClass}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="job_title">Job Title *</Label>
+              <Label htmlFor="job_title" className={labelClass}>Job Title *</Label>
               <Input
                 id="job_title"
                 value={formData.job_title}
                 onChange={(e) => setFormData(prev => ({ ...prev, job_title: e.target.value }))}
                 required
+                className={inputClass}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className={labelClass}>Email</Label>
               <Input
                 id="email"
                 value={profile.email}
                 disabled
-                className="bg-muted cursor-not-allowed opacity-70"
+                className="clbr-input cursor-not-allowed opacity-70"
               />
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-[#9DA2B3]">
                 Email cannot be changed. Contact an administrator if you need to update it.
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="start_date">Start Date *</Label>
+              <Label htmlFor="start_date" className={labelClass}>Start Date *</Label>
               <Input
                 id="start_date"
                 type="date"
                 value={formData.start_date}
                 onChange={(e) => setFormData(prev => ({ ...prev, start_date: e.target.value }))}
                 required
+                className={inputClass}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="birthday">Birthday</Label>
+              <Label htmlFor="birthday" className={labelClass}>Birthday</Label>
               <Input
                 id="birthday"
                 type="date"
                 value={formData.birthday}
                 onChange={(e) => setFormData(prev => ({ ...prev, birthday: e.target.value }))}
+                className={inputClass}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone</Label>
+              <Label htmlFor="phone" className={labelClass}>Phone</Label>
               <Input
                 id="phone"
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
                 placeholder="+1 (555) 123-4567"
+                className={inputClass}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
+              <Label htmlFor="location" className={labelClass}>Location</Label>
               <Input
                 id="location"
                 value={formData.location}
                 onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
                 placeholder="San Francisco, CA"
+                className={inputClass}
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label>Job Description</Label>
+            <Label className={labelClass}>Job Description</Label>
             <JobDescriptionEditor
               value={formData.job_description || ''}
               onChange={(html) => setFormData(prev => ({ ...prev, job_description: html }))}
@@ -262,10 +273,10 @@ export function ProfileEditor({ profile, onSaved }: ProfileEditorProps) {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Social Links</h3>
+            <h3 className="text-lg font-bold uppercase tracking-[0.3px] text-[#F2F2F2]">Social Links</h3>
             
             <div className="space-y-2">
-              <Label htmlFor="linkedin" className="flex items-center gap-2">
+              <Label htmlFor="linkedin" className={`${labelClass} flex items-center gap-2`}>
                 <Linkedin className="h-4 w-4" />
                 LinkedIn
               </Label>
@@ -278,11 +289,12 @@ export function ProfileEditor({ profile, onSaved }: ProfileEditorProps) {
                   social_links: { ...prev.social_links, linkedin: e.target.value }
                 }))}
                 placeholder="https://linkedin.com/in/username"
+                className={inputClass}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="instagram" className="flex items-center gap-2">
+              <Label htmlFor="instagram" className={`${labelClass} flex items-center gap-2`}>
                 <Instagram className="h-4 w-4" />
                 Instagram
               </Label>
@@ -295,11 +307,12 @@ export function ProfileEditor({ profile, onSaved }: ProfileEditorProps) {
                   social_links: { ...prev.social_links, instagram: e.target.value }
                 }))}
                 placeholder="https://instagram.com/username"
+                className={inputClass}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="facebook" className="flex items-center gap-2">
+              <Label htmlFor="facebook" className={`${labelClass} flex items-center gap-2`}>
                 <Facebook className="h-4 w-4" />
                 Facebook
               </Label>
@@ -312,24 +325,25 @@ export function ProfileEditor({ profile, onSaved }: ProfileEditorProps) {
                   social_links: { ...prev.social_links, facebook: e.target.value }
                 }))}
                 placeholder="https://facebook.com/username"
+                className={inputClass}
               />
             </div>
           </div>
 
           {updateProfile.isError && (
-            <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md">
+            <div className="rounded-[2px] border border-[rgba(64,66,77,0.55)] bg-[rgba(110,113,128,0.15)] p-3 text-sm text-[#D3D6E0]">
               Failed to update profile. Please try again.
             </div>
           )}
 
           {savedRecently && (
-            <div className="bg-green-50 border border-green-200 text-green-800 text-sm p-3 rounded-md flex items-center gap-2">
-              <span className="text-green-600">✓</span>
+            <div className="flex items-center gap-2 rounded-[2px] border border-[rgba(64,66,77,0.55)] bg-[rgba(64,66,77,0.24)] p-3 text-sm text-[#D3D6E0]">
+              <span className="text-[#F2F2F2]">✓</span>
               Profile saved successfully!
             </div>
           )}
 
-          <Button type="submit" disabled={updateProfile.isPending}>
+          <Button type="submit" disabled={updateProfile.isPending} className="clbr-btn-primary">
             {updateProfile.isPending && (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             )}

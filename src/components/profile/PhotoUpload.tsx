@@ -127,11 +127,11 @@ export function PhotoUpload({ currentPhotoUrl, userName, userId, onPhotoUploaded
   return (
     <div className={isSmall ? 'flex flex-col items-center gap-1' : 'flex flex-col items-center gap-4'}>
       <div className="relative" ref={menuRef}>
-        <Avatar className={isSmall ? 'h-[60px] w-[60px]' : 'h-32 w-32'}>
+        <Avatar className={isSmall ? 'h-[60px] w-[60px] bg-gradient-to-b from-[#5C5C5C] to-[#1F1F1F]' : 'h-32 w-32 bg-gradient-to-b from-[#5C5C5C] to-[#1F1F1F]'}>
           {currentPhotoUrl && (
             <AvatarImage src={currentPhotoUrl} alt={userName} />
           )}
-          <AvatarFallback className={isSmall ? '' : 'text-2xl'}>
+          <AvatarFallback className={isSmall ? 'bg-transparent text-[#F2F2F2] text-[11px] font-bold uppercase tracking-[0.3px]' : 'bg-transparent text-[#F2F2F2] text-2xl font-bold uppercase tracking-[0.3px]'}>
             {getInitials(userName)}
           </AvatarFallback>
         </Avatar>
@@ -140,8 +140,8 @@ export function PhotoUpload({ currentPhotoUrl, userName, userId, onPhotoUploaded
           type="button"
           size="icon"
           className={isSmall
-            ? 'absolute -bottom-1 -right-1 rounded-full h-5 w-5'
-            : 'absolute bottom-0 right-0 rounded-full'}
+            ? 'absolute -bottom-1 -right-1 rounded-full h-5 w-5 bg-[#414141] text-[#F2F2F2] hover:bg-[#40424D]'
+            : 'absolute bottom-0 right-0 rounded-full bg-[#414141] text-[#F2F2F2] hover:bg-[#40424D]'}
           onClick={handleCameraClick}
           disabled={uploading || compressing}
         >
@@ -150,22 +150,22 @@ export function PhotoUpload({ currentPhotoUrl, userName, userId, onPhotoUploaded
 
         {/* Edit menu — only shown when a photo exists */}
         {showEditMenu && (
-          <div className="absolute top-full left-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-10 min-w-[180px]">
+          <div className="absolute top-full left-0 z-10 mt-2 min-w-[180px] overflow-hidden rounded-[2px] border border-[rgba(64,66,77,0.55)] bg-[rgba(30,30,36,0.98)] shadow-[0_8px_24px_rgba(0,0,0,0.35)]">
             <button
               type="button"
-              className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-left hover:bg-gray-50 transition-colors"
+              className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-[#EDEFF7] transition-colors hover:bg-[rgba(64,66,77,0.3)] hover:text-[#F2F2F2]"
               onClick={handleUploadNew}
             >
-              <Upload className="h-4 w-4 text-muted-foreground" />
+              <Upload className="h-4 w-4 text-[#9DA2B3]" />
               Upload new photo
             </button>
-            <div className="border-t border-gray-100" />
+            <div className="border-t border-[rgba(64,66,77,0.35)]" />
             <button
               type="button"
-              className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-left hover:bg-gray-50 transition-colors"
+              className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-[#EDEFF7] transition-colors hover:bg-[rgba(64,66,77,0.3)] hover:text-[#F2F2F2]"
               onClick={handleRecrop}
             >
-              <Crop className="h-4 w-4 text-muted-foreground" />
+              <Crop className="h-4 w-4 text-[#9DA2B3]" />
               Recrop current photo
             </button>
           </div>
@@ -182,15 +182,15 @@ export function PhotoUpload({ currentPhotoUrl, userName, userId, onPhotoUploaded
       />
 
       {!isSmall && compressing && (
-        <p className="text-sm text-muted-foreground">Compressing image...</p>
+        <p className="text-sm text-[#9DA2B3]">Compressing image...</p>
       )}
 
       {!isSmall && uploading && (
-        <p className="text-sm text-muted-foreground">Uploading...</p>
+        <p className="text-sm text-[#9DA2B3]">Uploading...</p>
       )}
 
       {error && (
-        <p className="text-sm text-destructive">{error}</p>
+        <p className="text-sm text-[#D3D6E0]">{error}</p>
       )}
 
       {imageToCrop && (

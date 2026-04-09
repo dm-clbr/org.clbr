@@ -106,26 +106,26 @@ export function ManagerUserManagement() {
   }
 
   if (isLoading) {
-    return <div>Loading team members...</div>
+    return <div className="clbr-empty">Loading team members...</div>
   }
 
   if (!currentManager) {
-    return <div>Loading...</div>
+    return <div className="clbr-empty">Loading...</div>
   }
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="clbr-card">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Team Management</CardTitle>
-              <CardDescription>
+              <CardTitle className="clbr-card-title">Team Management</CardTitle>
+              <CardDescription className="clbr-card-description">
                 Manage your team members ({teamMembers.length} {teamMembers.length === 1 ? 'member' : 'members'})
               </CardDescription>
             </div>
             {!editingUser && (
-              <Button onClick={() => setShowInviteDialog(true)}>
+              <Button onClick={() => setShowInviteDialog(true)} className="clbr-btn-secondary">
                 <UserPlus className="mr-2 h-4 w-4" />
                 Invite Team Member
               </Button>
@@ -134,45 +134,48 @@ export function ManagerUserManagement() {
         </CardHeader>
         <CardContent>
           {teamMembers.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className="clbr-empty py-8">
               <p>You don't have any team members yet.</p>
-              <p className="text-sm mt-2">Click "Invite Team Member" to add someone to your team.</p>
+              <p className="mt-2 text-xs text-[#9DA2B3] normal-case tracking-normal font-normal">Click "Invite Team Member" to add someone to your team.</p>
             </div>
           ) : editingUser ? (
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="flex items-center gap-3 mb-4 p-3 bg-muted rounded-lg">
-                <Avatar>
+              <div className="clbr-list-item mb-4 flex items-center gap-3 p-3">
+                <Avatar className="h-10 w-10 bg-gradient-to-b from-[#5C5C5C] to-[#1F1F1F]">
                   {editingUser.profile_photo_url && (
                     <AvatarImage src={editingUser.profile_photo_url} alt={editingUser.full_name} />
                   )}
-                  <AvatarFallback>{getInitials(editingUser.full_name)}</AvatarFallback>
+                  <AvatarFallback className="bg-transparent text-[#F2F2F2] text-[11px] font-bold uppercase tracking-[0.3px]">
+                    {getInitials(editingUser.full_name)}
+                  </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="font-medium">{editingUser.full_name}</p>
-                  <p className="text-sm text-muted-foreground">{editingUser.job_title}</p>
+                  <p className="font-bold text-[#F2F2F2]">{editingUser.full_name}</p>
+                  <p className="text-sm text-[#9DA2B3]">{editingUser.job_title}</p>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="job_title">Job Title</Label>
+                <Label htmlFor="job_title" className="clbr-label">Job Title</Label>
                 <Input
                   id="job_title"
                   type="text"
                   value={formData.job_title}
                   onChange={(e) => setFormData(prev => ({ ...prev, job_title: e.target.value }))}
                   placeholder="e.g. Software Engineer"
+                  className="clbr-input"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="manager">Manager</Label>
+                <Label htmlFor="manager" className="clbr-label">Manager</Label>
                 {assignableManagers.length > 1 ? (
                   <select
                     id="manager"
                     value={formData.manager_id}
                     onChange={(e) => setFormData(prev => ({ ...prev, manager_id: e.target.value }))}
                     disabled={updateProfile.isPending}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="clbr-select flex h-10 w-full px-3 py-2 text-sm"
                   >
                     {assignableManagers.map((m) => (
                       <option key={m.id} value={m.id}>
@@ -186,10 +189,10 @@ export function ManagerUserManagement() {
                     type="text"
                     value={currentManager.full_name}
                     disabled
-                    className="bg-muted cursor-not-allowed"
+                    className="clbr-input cursor-not-allowed"
                   />
                 )}
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-[#9DA2B3]">
                   {assignableManagers.length > 1
                     ? 'Select the manager this person reports to. Only managers in your team are shown.'
                     : 'This team member reports directly to you.'}
@@ -197,17 +200,17 @@ export function ManagerUserManagement() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="department">
+                <Label htmlFor="department" className="clbr-label">
                   Department
                   {departmentAutoFilled && (
-                    <span className="ml-2 text-xs text-muted-foreground">(auto-updated from manager)</span>
+                    <span className="ml-2 text-xs text-[#9DA2B3] normal-case tracking-normal">(auto-updated from manager)</span>
                   )}
                 </Label>
                 <select
                   id="department"
                   value={formData.department_id}
                   onChange={(e) => handleDepartmentChange(e.target.value)}
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="clbr-select flex h-10 w-full px-3 py-2 text-sm"
                 >
                   <option value="">No Department</option>
                   {departments?.map((dept) => (
@@ -217,7 +220,7 @@ export function ManagerUserManagement() {
                   ))}
                 </select>
                 {departmentAutoFilled && (
-                  <div className="flex items-start gap-2 text-xs text-muted-foreground">
+                  <div className="flex items-start gap-2 text-xs text-[#9DA2B3]">
                     <Info className="h-3 w-3 mt-0.5 flex-shrink-0" />
                     <span>Department automatically updated from manager. You can change it if needed.</span>
                   </div>
@@ -225,7 +228,7 @@ export function ManagerUserManagement() {
               </div>
 
               <div className="space-y-2">
-                <Label>Job Description</Label>
+                <Label className="clbr-label">Job Description</Label>
                 <JobDescriptionEditor
                   value={formData.job_description || ''}
                   onChange={(html) => setFormData(prev => ({ ...prev, job_description: html }))}
@@ -235,13 +238,13 @@ export function ManagerUserManagement() {
               </div>
 
               <div className="flex gap-2">
-                <Button type="submit" disabled={updateProfile.isPending}>
+                <Button type="submit" disabled={updateProfile.isPending} className="clbr-btn-primary">
                   {updateProfile.isPending && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
                   Save Changes
                 </Button>
-                <Button type="button" variant="outline" onClick={handleCancel}>
+                <Button type="button" variant="outline" onClick={handleCancel} className="clbr-btn-secondary">
                   Cancel
                 </Button>
               </div>
@@ -255,31 +258,33 @@ export function ManagerUserManagement() {
                 return (
                   <div
                     key={profile.id}
-                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-accent transition-colors"
+                    className="clbr-list-item flex items-center justify-between p-3"
                   >
                     <div className="flex items-center gap-3 flex-1">
-                      <Avatar>
+                      <Avatar className="h-10 w-10 bg-gradient-to-b from-[#5C5C5C] to-[#1F1F1F]">
                         {profile.profile_photo_url && (
                           <AvatarImage src={profile.profile_photo_url} alt={profile.full_name} />
                         )}
-                        <AvatarFallback>{getInitials(profile.full_name)}</AvatarFallback>
+                        <AvatarFallback className="bg-transparent text-[#F2F2F2] text-[11px] font-bold uppercase tracking-[0.3px]">
+                          {getInitials(profile.full_name)}
+                        </AvatarFallback>
                       </Avatar>
                       
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className="font-medium truncate">{profile.full_name}</p>
+                          <p className="truncate font-bold text-[#F2F2F2]">{profile.full_name}</p>
                           {!hasLoggedIn && (
-                            <Badge variant="outline" className="border-yellow-500 text-yellow-700">
+                            <Badge variant="outline" className="clbr-badge-soft clbr-status-pending">
                               <Clock className="h-3 w-3 mr-1" />
                               Pending
                             </Badge>
                           )}
                         </div>
-                        <p className="text-sm text-muted-foreground truncate">{profile.job_title}</p>
+                        <p className="truncate text-sm text-[#9DA2B3]">{profile.job_title}</p>
                         {profile.department && (
                           <Badge
-                            className="mt-1"
-                            style={{ backgroundColor: profile.department.color, color: 'white' }}
+                            className="mt-1 rounded-[2px] border-0 px-2 py-1 text-[11px] font-bold uppercase tracking-[0.3px] text-[#F2F2F2]"
+                            style={{ backgroundColor: profile.department.color, color: '#F2F2F2' }}
                           >
                             {profile.department.name}
                           </Badge>
@@ -295,6 +300,7 @@ export function ManagerUserManagement() {
                           onClick={() => handleResendInvite(profile)}
                           disabled={isResending}
                           title="Resend invitation email"
+                          className="clbr-btn-secondary"
                         >
                           {isResending ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
@@ -310,6 +316,7 @@ export function ManagerUserManagement() {
                         variant="ghost"
                         size="icon"
                         onClick={() => handleEdit(profile)}
+                        className="clbr-btn-minimal h-9 w-9 p-0"
                       >
                         <Edit2 className="h-4 w-4" />
                       </Button>

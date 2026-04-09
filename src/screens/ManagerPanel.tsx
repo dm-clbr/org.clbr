@@ -9,9 +9,11 @@ export default function ManagerPanel() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="clbr-page-wrap">
+        <div className="clbr-page-content">
         <div className="flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <div className="animate-spin h-12 w-12 rounded-full border-b-2 border-[#D3D6E0]"></div>
+          </div>
         </div>
       </div>
     )
@@ -22,13 +24,15 @@ export default function ManagerPanel() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <h1 className="text-3xl font-bold mb-6">Manager Panel</h1>
-      <p className="text-muted-foreground mb-6">
+    <div className="clbr-page-wrap">
+      <div className="clbr-page-content max-w-6xl">
+      <h1 className="clbr-page-title">Manager Panel</h1>
+      <p className="clbr-page-description">
         Manage your team members. You can edit team member details and invite new employees to your team.
       </p>
 
       <ManagerUserManagement />
+      </div>
     </div>
   )
 }
