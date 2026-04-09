@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader } from '../components/ui/card'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
+import { LoadingSquare } from '../components/ui/loading-square'
 import { Lock, AlertCircle, CheckCircle2 } from 'lucide-react'
 
 export default function ResetPassword() {
@@ -62,7 +63,7 @@ export default function ResetPassword() {
   if (!ready) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+        <LoadingSquare />
       </div>
     )
   }

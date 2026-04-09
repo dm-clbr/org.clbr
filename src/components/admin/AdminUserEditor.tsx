@@ -20,6 +20,9 @@ export function AdminUserEditor({ profile, onSaved, onCancel }: AdminUserEditorP
   const { data: profiles } = useProfiles()
   const { data: departments } = useDepartments()
   const updateProfile = useUpdateProfile()
+  const labelClass = 'clbr-label'
+  const inputClass = 'clbr-input'
+  const selectClass = 'clbr-select flex h-10 w-full px-3 py-2 text-sm'
 
   const [departmentAutoFilled, setDepartmentAutoFilled] = useState(false)
   const [currentPhotoUrl, setCurrentPhotoUrl] = useState(profile.profile_photo_url)
@@ -103,8 +106,8 @@ export function AdminUserEditor({ profile, onSaved, onCancel }: AdminUserEditorP
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="flex items-center gap-4 p-3 bg-muted rounded-lg">
+    <form onSubmit={handleSubmit} className="max-h-[72vh] space-y-4 overflow-y-auto pr-1">
+      <div className="clbr-list-item flex items-center gap-4 p-3">
         <PhotoUpload
           currentPhotoUrl={currentPhotoUrl}
           userName={profile.full_name}
@@ -118,30 +121,31 @@ export function AdminUserEditor({ profile, onSaved, onCancel }: AdminUserEditorP
             onChange={(e) => setFormData(prev => ({ ...prev, full_name: e.target.value }))}
             placeholder="Full name"
             required
-            className="font-medium h-8 text-sm"
+            className={`${inputClass} h-9 text-sm font-bold`}
           />
-          <p className="text-xs text-muted-foreground px-1">{profile.email}</p>
+          <p className="px-1 text-xs text-[#9DA2B3]">{profile.email}</p>
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="job_title">Job Title</Label>
+        <Label htmlFor="job_title" className={labelClass}>Job Title</Label>
         <Input
           id="job_title"
           type="text"
           value={formData.job_title}
           onChange={(e) => setFormData(prev => ({ ...prev, job_title: e.target.value }))}
           placeholder="e.g. Software Engineer"
+          className={inputClass}
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="manager">Manager</Label>
+        <Label htmlFor="manager" className={labelClass}>Manager</Label>
         <select
           id="manager"
           value={formData.manager_id}
           onChange={(e) => handleManagerChange(e.target.value)}
-          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className={selectClass}
         >
           <option value="">No Manager</option>
           {potentialManagers.map((p) => (
@@ -162,91 +166,93 @@ export function AdminUserEditor({ profile, onSaved, onCancel }: AdminUserEditorP
       </div>
 
       <div className="space-y-2">
-        <Label>Job Description</Label>
+        <Label className={labelClass}>Job Description</Label>
         <JobDescriptionEditor
           value={formData.job_description}
           onChange={(html) => setFormData(prev => ({ ...prev, job_description: html }))}
           placeholder="Describe the employee's role and responsibilities..."
           minRows={4}
+          className="clbr-textarea"
         />
       </div>
 
-      <div className="space-y-3">
-        <div className="flex items-center gap-2">
+      <div className="space-y-2">
+        <p className={labelClass}>Permissions</p>
+
+        <label htmlFor="is_admin" className="clbr-list-item flex cursor-pointer items-center gap-3 p-3">
           <input
             type="checkbox"
             id="is_admin"
             checked={formData.is_admin}
             onChange={(e) => setFormData(prev => ({ ...prev, is_admin: e.target.checked }))}
-            className="h-4 w-4 rounded border-gray-300"
+            className="h-4 w-4 rounded border-[rgba(64,66,77,0.55)] bg-[#1E1E24] accent-[#D3D6E0]"
           />
-          <Label htmlFor="is_admin" className="flex items-center gap-2">
-            <Shield className="h-4 w-4" />
-            Administrator
-          </Label>
-        </div>
-        <div className="flex items-center gap-2">
+          <Shield className="h-4 w-4 text-[#D3D6E0]" />
+          <span className="text-sm font-bold uppercase tracking-[0.3px] text-[#F2F2F2]">Administrator</span>
+        </label>
+
+        <label htmlFor="is_manager" className="clbr-list-item flex cursor-pointer items-center gap-3 p-3">
           <input
             type="checkbox"
             id="is_manager"
             checked={formData.is_manager}
             onChange={(e) => setFormData(prev => ({ ...prev, is_manager: e.target.checked }))}
-            className="h-4 w-4 rounded border-gray-300"
+            className="h-4 w-4 rounded border-[rgba(64,66,77,0.55)] bg-[#1E1E24] accent-[#D3D6E0]"
           />
-          <Label htmlFor="is_manager" className="flex items-center gap-2">
-            <Users className="h-4 w-4" />
-            Manager
-          </Label>
-        </div>
-        <div className="flex items-center gap-2">
+          <Users className="h-4 w-4 text-[#D3D6E0]" />
+          <span className="text-sm font-bold uppercase tracking-[0.3px] text-[#F2F2F2]">Manager</span>
+        </label>
+
+        <label htmlFor="is_executive" className="clbr-list-item flex cursor-pointer items-center gap-3 p-3">
           <input
             type="checkbox"
             id="is_executive"
             checked={formData.is_executive}
             onChange={(e) => setFormData(prev => ({ ...prev, is_executive: e.target.checked }))}
-            className="h-4 w-4 rounded border-gray-300"
+            className="h-4 w-4 rounded border-[rgba(64,66,77,0.55)] bg-[#1E1E24] accent-[#D3D6E0]"
           />
-          <Label htmlFor="is_executive" className="flex items-center gap-2">
-            <BarChart2 className="h-4 w-4" />
+          <BarChart2 className="h-4 w-4 text-[#D3D6E0]" />
+          <span className="text-sm font-bold uppercase tracking-[0.3px] text-[#F2F2F2]">
             Executive (KPI Dashboard access)
-          </Label>
-        </div>
-        <div className="flex items-center gap-2">
+          </span>
+        </label>
+
+        <label htmlFor="is_process_editor" className="clbr-list-item flex cursor-pointer items-center gap-3 p-3">
           <input
             type="checkbox"
             id="is_process_editor"
             checked={formData.is_process_editor}
             onChange={(e) => setFormData(prev => ({ ...prev, is_process_editor: e.target.checked }))}
-            className="h-4 w-4 rounded border-gray-300"
+            className="h-4 w-4 rounded border-[rgba(64,66,77,0.55)] bg-[#1E1E24] accent-[#D3D6E0]"
           />
-          <Label htmlFor="is_process_editor" className="flex items-center gap-2">
-            <GitFork className="h-4 w-4" />
+          <GitFork className="h-4 w-4 text-[#D3D6E0]" />
+          <span className="text-sm font-bold uppercase tracking-[0.3px] text-[#F2F2F2]">
             Process Editor (create &amp; edit any process)
-          </Label>
-        </div>
+          </span>
+        </label>
       </div>
 
       {updateProfile.isError && (
-        <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md">
+        <div className="rounded-[2px] border border-[rgba(64,66,77,0.55)] bg-[rgba(110,113,128,0.15)] p-3 text-sm text-[#D3D6E0]">
           Failed to update profile. Please try again.
         </div>
       )}
 
       {updateProfile.isSuccess && (
-        <div className="bg-green-50 text-green-900 text-sm p-3 rounded-md">
+        <div className="rounded-[2px] border border-[rgba(64,66,77,0.55)] bg-[rgba(64,66,77,0.24)] p-3 text-sm text-[#D3D6E0]">
           Profile updated successfully!
         </div>
       )}
 
-      <div className="flex gap-2">
-        <Button type="submit" disabled={updateProfile.isPending}>
+      <div className="flex gap-2 pt-1">
+        <Button type="submit" disabled={updateProfile.isPending} className="clbr-btn-primary flex-1">
           {updateProfile.isPending && (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           )}
           Save Changes
         </Button>
         {onCancel && (
-          <Button type="button" variant="outline" onClick={onCancel}>
+          <Button type="button" variant="outline" onClick={onCancel} className="clbr-btn-secondary">
             Cancel
           </Button>
         )}

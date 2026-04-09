@@ -4,12 +4,13 @@ import { useOrganizationSettings, usePublicProcessBundle } from '../lib/queries'
 import { PublicProcessCanvas } from '../components/processes/PublicProcessCanvas'
 import { Card } from '../components/ui/card'
 import { Badge } from '../components/ui/badge'
+import { LoadingSquare } from '../components/ui/loading-square'
 
 function LoadingScreen() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto" />
+        <LoadingSquare className="mx-auto" />
         <p className="mt-4 text-muted-foreground">Loading process diagram...</p>
       </div>
     </div>

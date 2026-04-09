@@ -4,6 +4,7 @@ import { useAuth } from '../hooks/useAuth'
 import { ProfileEditor } from '../components/profile/ProfileEditor'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { Button } from '../components/ui/button'
+import { LoadingSquare } from '../components/ui/loading-square'
 
 export default function Profile() {
   usePageTitle('My Profile')
@@ -29,7 +30,7 @@ export default function Profile() {
       <div className="clbr-page-wrap">
         <div className="clbr-page-content">
         <div className="flex items-center justify-center">
-          <div className="animate-spin h-12 w-12 rounded-full border-b-2 border-[#D3D6E0]"></div>
+          <LoadingSquare />
           </div>
         </div>
       </div>

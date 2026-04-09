@@ -9,6 +9,7 @@ import { ProfileCard } from '../components/profile/ProfileCard'
 import { AdminUserEditorDialog } from '../components/admin/AdminUserEditorDialog'
 import { Button } from '../components/ui/button'
 import { Card } from '../components/ui/card'
+import { LoadingSquare } from '../components/ui/loading-square'
 import { X, SlidersHorizontal } from 'lucide-react'
 import { useDepartments, getDepartmentDescendantIds, useOrgChartPositions } from '../lib/queries'
 
@@ -61,7 +62,7 @@ export default function Dashboard() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <LoadingSquare />
         </div>
       </div>
     )
@@ -161,11 +162,11 @@ export default function Dashboard() {
         {/* Selected profile detail */}
         {selectedProfile && (
           <div className="absolute top-2 right-2 left-2 md:left-auto md:top-4 md:right-4 md:w-96 max-h-[calc(100%-1rem)] overflow-y-auto z-10">
-            <div className="relative bg-white shadow-lg rounded-lg">
+            <div className="relative overflow-hidden rounded-[2px] border border-[rgba(64,66,77,0.55)] bg-[#131313] text-[#F2F2F2] shadow-[0_16px_36px_rgba(0,0,0,0.55)]">
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute top-2 right-2 z-10"
+                className="clbr-btn-minimal absolute right-3 top-3 z-10 h-9 w-9 p-0 text-[#D3D6E0] hover:bg-[rgba(64,66,77,0.24)] hover:text-[#F2F2F2]"
                 onClick={() => setSelectedProfileId(null)}
               >
                 <X className="h-4 w-4" />

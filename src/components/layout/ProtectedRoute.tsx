@@ -3,6 +3,7 @@ import { Navigate } from '../../lib/router-shim'
 import { useAuth } from '../../hooks/useAuth'
 import { useProfile } from '../../hooks/useProfile'
 import { Button } from '../ui/button'
+import { LoadingSquare } from '../ui/loading-square'
 
 interface ProtectedRouteProps {
   children: React.ReactNode
@@ -29,7 +30,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <LoadingSquare className="mx-auto" />
           <p className="mt-4 text-muted-foreground">Loading...</p>
         </div>
       </div>
@@ -48,7 +49,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <LoadingSquare className="mx-auto" />
           <p className="mt-4 text-muted-foreground">Redirecting to onboarding...</p>
         </div>
       </div>

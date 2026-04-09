@@ -2,6 +2,7 @@ import { useParams } from '../lib/router-shim'
 import { usePublicOrgShareBundle } from '../lib/queries'
 import { OrgChartCanvas } from '../components/org-chart/OrgChartCanvas'
 import { Card } from '../components/ui/card'
+import { LoadingSquare } from '../components/ui/loading-square'
 import { AlertCircle } from 'lucide-react'
 
 export default function PublicShare() {
@@ -14,7 +15,7 @@ export default function PublicShare() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <LoadingSquare className="mx-auto" />
           <p className="mt-4 text-muted-foreground">Loading org chart...</p>
         </div>
       </div>

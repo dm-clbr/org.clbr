@@ -6,6 +6,7 @@ import { DepartmentManager } from '../components/admin/DepartmentManager'
 import { UserManagement } from '../components/admin/UserManagement'
 import { LogoUpload } from '../components/admin/LogoUpload'
 import { Button } from '../components/ui/button'
+import { LoadingSquare } from '../components/ui/loading-square'
 import { Building2, Users, Palette } from 'lucide-react'
 
 type Tab = 'departments' | 'users' | 'branding'
@@ -21,7 +22,7 @@ export default function AdminPanel() {
       <div className="clbr-page-wrap">
         <div className="clbr-page-content">
         <div className="flex items-center justify-center">
-          <div className="animate-spin h-12 w-12 rounded-full border-b-2 border-[#D3D6E0]"></div>
+          <LoadingSquare />
           </div>
         </div>
       </div>

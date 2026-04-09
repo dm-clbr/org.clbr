@@ -984,6 +984,13 @@ button {
   text-transform: uppercase;
 }
 
+.clbr-loading-square {
+  display: block;
+  flex-shrink: 0;
+  height: 14px;
+  width: 14px;
+}
+
 @media (max-width: 980px) {
   .org-layout-shell {
     flex-direction: column;
