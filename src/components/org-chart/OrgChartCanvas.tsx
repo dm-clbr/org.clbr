@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import ReactFlow, {
   Background,
+  BackgroundVariant,
   Controls,
   MiniMap,
   useNodesState,
@@ -300,6 +301,7 @@ function OrgChartCanvasInner({
   return (
     <div className="w-full h-full">
       <ReactFlow
+        className="org-chart-flow"
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
@@ -318,16 +320,16 @@ function OrgChartCanvasInner({
         defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
         proOptions={{ hideAttribution: true }}
       >
-        <Background />
-        <Controls />
+        <Background variant={BackgroundVariant.Dots} gap={24} size={1} color="#40424D" />
+        <Controls className="org-chart-controls" />
         {isAdmin && (
-          <Panel position="top-left" className="bg-white rounded-lg shadow-md p-2 m-2">
+          <Panel position="top-left" className="rounded-[2px] border border-[rgba(64,66,77,0.45)] bg-[rgba(30,30,36,0.7)] p-2 m-2 shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-sm">
             <Button
               onClick={handleSaveCleanLayout}
               variant="outline"
               size="sm"
               disabled={clearAllPositions.isPending || batchSavePositions.isPending}
-              className="flex items-center gap-2"
+              className="h-[40px] rounded-[2px] border-[rgba(64,66,77,0.55)] bg-[#414141] px-4 text-[12px] font-bold uppercase tracking-[0.3px] text-[#F2F2F2] hover:bg-[#40424D] hover:text-[#F2F2F2]"
             >
               {(clearAllPositions.isPending || batchSavePositions.isPending) ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -340,11 +342,12 @@ function OrgChartCanvasInner({
         )}
         {!isMobile && (
           <MiniMap 
+            className="org-chart-minimap"
             nodeColor={(node: any) => {
               const profile = node.data?.profile as OrgChartProfile
               return profile?.department?.color || '#94a3b8'
             }}
-            maskColor="rgba(0, 0, 0, 0.1)"
+            maskColor="rgba(0, 0, 0, 0.5)"
           />
         )}
       </ReactFlow>

@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["Manrope", "-apple-system", "system-ui", "Segoe UI", "Roboto", "sans-serif"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -40,6 +43,17 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        light: "#F2F2F2",
+        cloud: "#EDEFF7",
+        smoke: "#D3D6E0",
+        steel: "#BCBFCC",
+        space: "#9DA2B3",
+        graphite: "#6E7180",
+        surface: "#414141",
+        arsenic: "#40424D",
+        phantom: "#1E1E24",
+        "clbr-background": "#131313",
+        "near-black": "#121212",
       },
       borderRadius: {
         lg: "var(--radius)",

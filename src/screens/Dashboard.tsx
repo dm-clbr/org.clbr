@@ -83,20 +83,20 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
+    <div className="org-chart-page min-h-screen flex flex-col md:flex-row bg-[#000000] text-[#F2F2F2]">
       {/* Mobile: filter toggle bar */}
-      <div className="md:hidden flex items-center gap-2 px-4 py-2 border-b bg-white shrink-0">
+      <div className="md:hidden flex items-center gap-2 px-4 py-2 border-b border-[rgba(64,66,77,0.4)] bg-[#131313] shrink-0">
         <Button
           variant="outline"
           size="sm"
           onClick={() => setSidebarOpen((v) => !v)}
-          className="flex items-center gap-2"
+          className="h-[40px] rounded-[2px] border-[rgba(64,66,77,0.55)] bg-[#414141] px-3 text-[12px] font-bold uppercase tracking-[0.3px] text-[#F2F2F2] hover:bg-[#40424D] hover:text-[#F2F2F2]"
         >
           <SlidersHorizontal className="h-4 w-4" />
           {sidebarOpen ? 'Hide Filters' : 'Search & Filter'}
         </Button>
         {selectedDepartment && (
-          <span className="text-xs text-muted-foreground">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.3px] text-[#9DA2B3]">
             Focusing on {profiles.length} employee{profiles.length !== 1 ? 's' : ''}
           </span>
         )}
@@ -105,13 +105,13 @@ export default function Dashboard() {
       {/* Sidebar */}
       <div
         className={`
-          bg-white border-b md:border-b-0 md:border-r md:w-80 p-4 overflow-y-auto shrink-0
+          bg-[#131313] border-b border-[rgba(64,66,77,0.4)] md:border-b-0 md:border-r md:border-r-[rgba(64,66,77,0.4)] md:w-80 p-4 overflow-y-auto shrink-0
           ${sidebarOpen ? 'block' : 'hidden md:block'}
         `}
       >
         <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2">Organization Chart</h2>
-          <p className="text-sm text-muted-foreground">
+          <h2 className="text-[34px] leading-[1.05] font-extrabold tracking-[-0.03em] text-[#F2F2F2] mb-2">Organization Chart</h2>
+          <p className="text-[12px] font-semibold uppercase tracking-[0.3px] text-[#9DA2B3]">
             {selectedDepartment
               ? `Focusing on ${profiles.length} of ${allProfiles?.length || 0} employees`
               : `Browse and search ${allProfiles?.length || 0} employees`}
@@ -133,7 +133,7 @@ export default function Dashboard() {
       </div>
 
       {/* Main content - Org Chart */}
-      <div className="flex-1 relative min-h-0">
+      <div className="flex-1 relative min-h-0 bg-[#000000]">
         {profiles.length === 0 && selectedDepartment ? (
           <div className="flex items-center justify-center h-full">
             <Card className="p-8 text-center">

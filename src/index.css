@@ -68,7 +68,7 @@
 }
 
 @theme {
-  --font-sans: 'PPTelegraf', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Manrope', -apple-system, system-ui, 'Segoe UI', Roboto, sans-serif;
 
   /* Map shadcn CSS variables into Tailwind v4's theme token system.
      Tailwind v4 requires --color-* tokens in @theme for utilities
@@ -119,6 +119,21 @@
   --input: 214.3 31.8% 91.4%;
   --ring: 222.2 84% 4.9%;
   --radius: 0.5rem;
+
+  /* CLBR main-site style tokens */
+  --clbr-light: #f2f2f2;
+  --clbr-cloud: #edeff7;
+  --clbr-smoke: #d3d6e0;
+  --clbr-steel: #bcbfcc;
+  --clbr-space: #9da2b3;
+  --clbr-graphite: #6e7180;
+  --clbr-white: #ffffff;
+  --clbr-near-black: #121212;
+  --clbr-black: #000000;
+  --clbr-background: #131313;
+  --clbr-phantom: #1e1e24;
+  --clbr-arsenic: #40424d;
+  --clbr-surface: #414141;
 }
 
 .dark {
@@ -144,7 +159,7 @@
 }
 
 body {
-  font-family: 'PPTelegraf', ui-sans-serif, system-ui, sans-serif;
+  font-family: Manrope, -apple-system, system-ui, 'Segoe UI', Roboto, sans-serif;
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
 }
@@ -208,7 +223,7 @@ button {
 
 /* Employee shell side-nav */
 .org-layout-shell {
-  --org-bg: hsl(var(--background));
+  --org-bg: var(--clbr-black);
 
   background: var(--org-bg);
   display: flex;
@@ -224,8 +239,8 @@ button {
 }
 
 .platformShellAside {
-  background: hsl(var(--card));
-  border-right: 1px solid hsl(var(--border));
+  background: var(--clbr-background);
+  border-right: 1px solid rgb(64 66 77 / 0.4);
   box-sizing: border-box;
   flex: 0 0 280px;
   min-width: 280px;
@@ -245,35 +260,38 @@ button {
 }
 
 .brandRow {
-  border-bottom: 1px solid hsl(var(--border));
+  border-bottom: 1px solid rgb(64 66 77 / 0.4);
   margin-bottom: 0.5rem;
   padding: 0.25rem 0.25rem 0.75rem;
 }
 
 .brandLink {
   align-items: center;
-  border-radius: 0.75rem;
-  color: hsl(var(--foreground));
+  border-radius: 2px;
+  color: var(--clbr-light);
   display: inline-flex;
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
   gap: 0.55rem;
+  letter-spacing: 0.3px;
   min-height: 2.25rem;
   padding: 0.25rem 0.45rem;
   text-decoration: none;
+  text-transform: uppercase;
 }
 
 .brandLink:hover {
-  background: hsl(var(--accent));
+  opacity: 0.7;
 }
 
 .brandWordmark {
-  height: 1.125rem;
-  width: auto;
+  height: auto;
+  max-width: 9rem;
+  width: 100%;
 }
 
 .brandText {
-  letter-spacing: 0.08em;
+  letter-spacing: 0.3px;
 }
 
 .primaryNav,
@@ -284,7 +302,7 @@ button {
 }
 
 .utilityNav {
-  border-top: 1px solid hsl(var(--border));
+  border-top: 1px solid rgb(64 66 77 / 0.4);
   margin-top: 0.25rem;
   padding-top: 0.75rem;
 }
@@ -292,14 +310,18 @@ button {
 .navItem,
 .utilityItem {
   align-items: center;
-  border-radius: 0.75rem;
-  color: hsl(var(--muted-foreground));
+  border-radius: 2px;
+  color: var(--clbr-cloud);
   display: flex;
   gap: 0.7rem;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
   min-height: 2.5rem;
   padding: 0.6rem 0.65rem;
   position: relative;
   text-decoration: none;
+  text-transform: uppercase;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -308,51 +330,53 @@ button {
 .profileLink:focus-visible,
 .profileLogoutButton:focus-visible,
 .brandLink:focus-visible {
-  outline: 2px solid hsl(var(--ring));
+  outline: 2px solid var(--clbr-smoke);
   outline-offset: 2px;
 }
 
 .navItem:hover,
 .utilityItem:hover {
-  background: hsl(var(--accent));
-  color: hsl(var(--foreground));
+  background: rgb(64 66 77 / 0.24);
+  color: var(--clbr-light);
 }
 
 .navItem.active,
 .utilityItem.active {
-  background: radial-gradient(circle at right center, rgb(31 218 67 / 0.14), rgb(0 0 0 / 0) 74%);
-  color: hsl(var(--foreground));
+  background: linear-gradient(to bottom right, var(--clbr-graphite), var(--clbr-arsenic), var(--clbr-phantom));
+  color: var(--clbr-light);
 }
 
 .navItem.active::after,
 .utilityItem.active::after {
-  background: linear-gradient(180deg, rgb(106 255 139) 0%, rgb(31 218 67) 100%);
+  background: var(--clbr-smoke);
   border-radius: 999px;
-  box-shadow: 0 0 12px rgb(31 218 67 / 0.45);
+  box-shadow: none;
   content: "";
   height: calc(100% - 0.8rem);
   position: absolute;
   right: 0.35rem;
   top: 0.4rem;
-  width: 0.2rem;
+  width: 0.12rem;
 }
 
 .navIcon {
   align-items: center;
+  background: linear-gradient(to bottom, #5c5c5c, #1f1f1f);
+  border-radius: 9999px;
   display: inline-flex;
-  flex: 0 0 1.1rem;
-  height: 1.1rem;
+  flex: 0 0 1.3rem;
+  height: 1.3rem;
   justify-content: center;
-  width: 1.1rem;
+  width: 1.3rem;
 }
 
 .navIcon img {
   display: block;
-  height: 100%;
+  height: 0.78rem;
   object-fit: contain;
-  opacity: 0.82;
-  filter: grayscale(1);
-  width: 100%;
+  opacity: 0.88;
+  filter: grayscale(1) brightness(1.1);
+  width: 0.78rem;
 }
 
 .navItem:hover .navIcon img,
@@ -370,8 +394,8 @@ button {
 }
 
 .navLabel {
-  font-size: 0.93rem;
-  line-height: 1.2rem;
+  font-size: 12px;
+  line-height: 1.15rem;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -379,18 +403,20 @@ button {
 }
 
 .profileSection {
+  border-top: 1px solid rgb(64 66 77 / 0.4);
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
   margin-top: auto;
+  padding-top: 0.75rem;
 }
 
 .profileLink,
 .profileButton {
   align-items: center;
-  background: transparent;
-  border: 1px solid hsl(var(--border));
-  border-radius: 0.9rem;
+  background: rgb(30 30 36 / 0.5);
+  border: 1px solid rgb(64 66 77 / 0.3);
+  border-radius: 2px;
   color: inherit;
   display: flex;
   gap: 0.65rem;
@@ -407,31 +433,31 @@ button {
 }
 
 .profileButton:hover {
-  background: hsl(var(--accent));
-  border-color: hsl(var(--ring));
+  background: rgb(65 65 65 / 0.5);
+  border-color: rgb(64 66 77 / 0.55);
 }
 
 .profileLink:hover {
-  background: hsl(var(--accent));
-  border-color: hsl(var(--ring));
+  background: rgb(65 65 65 / 0.5);
+  border-color: rgb(64 66 77 / 0.55);
 }
 
 .profileLink.active {
-  background: radial-gradient(circle at right center, rgb(31 218 67 / 0.14), rgb(0 0 0 / 0) 74%);
-  border-color: hsl(var(--ring));
-  color: hsl(var(--foreground));
+  background: linear-gradient(to bottom right, var(--clbr-graphite), var(--clbr-arsenic), var(--clbr-phantom));
+  border-color: rgb(64 66 77 / 0.55);
+  color: var(--clbr-light);
 }
 
 .profileLink.active::after {
-  background: linear-gradient(180deg, rgb(106 255 139) 0%, rgb(31 218 67) 100%);
+  background: var(--clbr-smoke);
   border-radius: 999px;
-  box-shadow: 0 0 12px rgb(31 218 67 / 0.45);
+  box-shadow: none;
   content: "";
   height: calc(100% - 0.8rem);
   position: absolute;
   right: 0.35rem;
   top: 0.4rem;
-  width: 0.2rem;
+  width: 0.12rem;
 }
 
 .profileButton:disabled {
@@ -440,24 +466,26 @@ button {
 }
 
 .profileLogoutButton {
-  background: transparent;
-  border: 1px solid hsl(var(--border));
-  border-radius: 0.7rem;
-  color: hsl(var(--muted-foreground));
+  background: var(--clbr-surface);
+  border: 1px solid rgb(64 66 77 / 0.3);
+  border-radius: 2px;
+  color: var(--clbr-light);
   cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 600;
-  min-height: 2.15rem;
-  padding: 0.4rem 0.6rem;
+  font-size: 14px;
+  font-weight: 700;
+  min-height: 45px;
+  padding: 10px 20px;
+  letter-spacing: 0.3px;
   text-align: center;
+  text-transform: uppercase;
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   width: 100%;
 }
 
 .profileLogoutButton:hover {
-  background: hsl(var(--accent));
-  border-color: hsl(var(--ring));
-  color: hsl(var(--foreground));
+  background: var(--clbr-arsenic);
+  border-color: rgb(64 66 77 / 0.55);
+  color: var(--clbr-light);
 }
 
 .profileLogoutButton:disabled {
@@ -467,7 +495,7 @@ button {
 
 .profileAvatar {
   align-items: center;
-  background: hsl(var(--muted));
+  background: linear-gradient(to bottom, #5c5c5c, #1f1f1f);
   border-radius: 999px;
   display: inline-flex;
   flex: 0 0 2rem;
@@ -485,8 +513,8 @@ button {
 }
 
 .profileInitials {
-  color: hsl(var(--foreground));
-  font-size: 0.7rem;
+  color: var(--clbr-light);
+  font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.06em;
 }
@@ -499,18 +527,22 @@ button {
 }
 
 .profileCopy strong {
-  color: hsl(var(--foreground));
-  font-size: 0.85rem;
+  color: var(--clbr-light);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
 .profileCopy small {
-  color: hsl(var(--muted-foreground));
-  font-size: 0.75rem;
+  color: var(--clbr-space);
+  font-size: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
@@ -613,19 +645,19 @@ button {
 }
 
 .dark .org-layout-shell > aside {
-  background: hsl(var(--card)) !important;
-  border-right-color: hsl(var(--border)) !important;
-  color: hsl(var(--muted-foreground)) !important;
+  background: var(--clbr-background) !important;
+  border-right-color: rgb(64 66 77 / 0.4) !important;
+  color: var(--clbr-steel) !important;
 }
 
 .dark .org-layout-shell > aside [class*="collapseToggle"] {
-  border-color: hsl(var(--border)) !important;
-  color: hsl(var(--muted-foreground)) !important;
+  border-color: rgb(64 66 77 / 0.4) !important;
+  color: var(--clbr-steel) !important;
 }
 
 .dark .org-layout-shell > aside [class*="collapseToggle"]:hover {
-  background: hsl(var(--accent)) !important;
-  color: hsl(var(--foreground)) !important;
+  background: rgb(64 66 77 / 0.24) !important;
+  color: var(--clbr-light) !important;
 }
 
 .dark .org-layout-shell > aside [class*="navItem"],
@@ -633,29 +665,30 @@ button {
 .dark .org-layout-shell > aside [class*="mobileTabLink"],
 .dark .org-layout-shell > aside [class*="mobileTabButton"],
 .dark .org-layout-shell > aside [class*="mobileMenuItem"] {
-  color: hsl(var(--muted-foreground)) !important;
+  color: var(--clbr-cloud) !important;
 }
 
 .dark .org-layout-shell > aside [class*="navItem"][class*="active"],
 .dark .org-layout-shell > aside [class*="utilityItem"][class*="active"],
 .dark .org-layout-shell > aside [class*="mobileTabActive"],
 .dark .org-layout-shell > aside [class*="mobileMenuItemActive"] {
-  background: radial-gradient(
-    circle at right center,
-    rgb(31 218 67 / 0.16),
-    rgb(0 0 0 / 0) 74%
+  background: linear-gradient(
+    to bottom right,
+    var(--clbr-graphite),
+    var(--clbr-arsenic),
+    var(--clbr-phantom)
   ) !important;
-  color: hsl(var(--foreground)) !important;
+  color: var(--clbr-light) !important;
 }
 
 .dark .org-layout-shell > aside [class*="navItem"][class*="active"]::after {
-  background: linear-gradient(180deg, rgb(106 255 139) 0%, rgb(31 218 67) 100%) !important;
-  box-shadow: 0 0 12px rgb(31 218 67 / 0.5) !important;
+  background: var(--clbr-smoke) !important;
+  box-shadow: none !important;
 }
 
 .dark .org-layout-shell > aside [class*="mobileTabBar"] {
-  background: hsl(var(--card)) !important;
-  border-top-color: hsl(var(--border)) !important;
+  background: var(--clbr-background) !important;
+  border-top-color: rgb(64 66 77 / 0.4) !important;
 }
 
 .dark .org-layout-shell > aside [class*="mobileMenuOverlay"] {
@@ -663,16 +696,16 @@ button {
 }
 
 .dark .org-layout-shell > aside [class*="mobileMenuSheet"] {
-  background: hsl(var(--card)) !important;
+  background: var(--clbr-phantom) !important;
 }
 
 .dark .org-layout-shell > aside [class*="mobileMenuHeader"] {
-  border-bottom-color: hsl(var(--border)) !important;
-  color: hsl(var(--foreground)) !important;
+  border-bottom-color: rgb(64 66 77 / 0.4) !important;
+  color: var(--clbr-light) !important;
 }
 
 .dark .org-layout-shell > aside [class*="profileCopy"] small {
-  color: hsl(var(--muted-foreground)) !important;
+  color: var(--clbr-space) !important;
 }
 
 .dark .org-layout-shell > aside [class*="navIcon"] img,
@@ -697,6 +730,58 @@ button {
   overflow: auto;
 }
 
+.org-chart-flow {
+  background: var(--clbr-black);
+}
+
+.org-chart-flow .react-flow__pane {
+  cursor: grab;
+}
+
+.org-chart-flow .react-flow__pane:active {
+  cursor: grabbing;
+}
+
+.org-chart-flow .react-flow__edge-path {
+  stroke: #6e7180;
+  stroke-width: 1.6;
+}
+
+.org-chart-flow .react-flow__node-employee.selected > div {
+  border-color: #d3d6e0 !important;
+  box-shadow: 0 0 0 1px rgb(211 214 224 / 0.55), 0 14px 30px rgb(0 0 0 / 0.45) !important;
+}
+
+.org-chart-flow .react-flow__controls {
+  border: 1px solid rgb(64 66 77 / 0.55);
+  border-radius: 2px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.35);
+  overflow: hidden;
+}
+
+.org-chart-flow .react-flow__controls-button {
+  background: rgb(30 30 36 / 0.9);
+  border-bottom: 1px solid rgb(64 66 77 / 0.4);
+  color: #edeff7;
+  height: 32px;
+  width: 32px;
+}
+
+.org-chart-flow .react-flow__controls-button:hover {
+  background: #40424d;
+  color: #f2f2f2;
+}
+
+.org-chart-flow .react-flow__controls-button svg {
+  fill: currentColor;
+}
+
+.org-chart-minimap {
+  background: rgb(19 19 19 / 0.88);
+  border: 1px solid rgb(64 66 77 / 0.45);
+  border-radius: 2px;
+}
+
 @media (max-width: 980px) {
   .org-layout-shell {
     flex-direction: column;
@@ -704,7 +789,7 @@ button {
 
   .platformShellAside {
     border-right: 0;
-    border-bottom: 1px solid hsl(var(--border));
+    border-bottom: 1px solid rgb(64 66 77 / 0.4);
     flex: 0 0 auto;
     max-width: none;
     min-height: auto;

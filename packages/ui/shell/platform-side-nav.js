@@ -124,11 +124,11 @@ export function PlatformSideNav(props) {
           React.Fragment,
           null,
           React.createElement("img", {
-            src: "/images/aveyo-logo.svg",
+            src: "/images/clbr-lockup-white.svg",
             alt: wordmarkAlt,
-            className: "brandWordmark"
-          }),
-          React.createElement("span", { className: "brandText" }, "CLBR")
+            className: "brandWordmark",
+            loading: "eager"
+          })
         )
       })
     ),

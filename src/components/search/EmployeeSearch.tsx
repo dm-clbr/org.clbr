@@ -106,20 +106,20 @@ export function EmployeeSearch({
   }, [profiles, searchQuery, selectedDepartment, departments])
 
   return (
-    <div className="space-y-4 h-full">
+    <div className="org-employee-search space-y-4 h-full">
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#9DA2B3]" />
         <Input
           placeholder="Search employees..."
           value={searchQuery}
           onChange={(e) => handleSearchChange(e.target.value)}
-          className="pl-10"
+          className="h-[44px] rounded-[2px] border-[rgba(64,66,77,0.5)] bg-[#1E1E24] pl-10 text-[14px] text-[#F2F2F2] placeholder:text-[#9DA2B3] focus-visible:ring-[#D3D6E0] focus-visible:ring-offset-0"
         />
         {searchQuery && (
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6"
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 rounded-[2px] text-[#9DA2B3] hover:bg-[#40424D]/30 hover:text-[#F2F2F2]"
             onClick={() => handleSearchChange('')}
           >
             <X className="h-4 w-4" />
@@ -129,16 +129,14 @@ export function EmployeeSearch({
 
       {filterNodes.length > 0 && (
         <div>
-          <p className="text-xs text-muted-foreground mb-2 font-medium">Filter by Department</p>
+          <p className="mb-2 text-[12px] font-bold uppercase tracking-[0.3px] text-[#BCBFCC]">Filter by Department</p>
           <div className="flex flex-wrap gap-1.5">
             <Badge
-              variant={selectedDepartment === null ? 'default' : 'outline'}
-              className="cursor-pointer"
-              style={
-                selectedDepartment === null
-                  ? { backgroundColor: 'hsl(var(--primary))', color: 'white' }
-                  : undefined
-              }
+              variant="outline"
+              className={cn(
+                'cursor-pointer rounded-[2px] border-[rgba(64,66,77,0.55)] bg-transparent px-2 py-1 text-[11px] font-bold uppercase tracking-[0.3px] text-[#EDEFF7] transition-colors hover:bg-[#40424D]/40 hover:text-[#F2F2F2]',
+                selectedDepartment === null && 'border-[rgba(64,66,77,0.7)] bg-[#414141] text-[#F2F2F2]'
+              )}
               onClick={() => handleDepartmentChange(null)}
             >
               All
@@ -148,9 +146,13 @@ export function EmployeeSearch({
               return (
                 <Badge
                   key={dept.id}
-                  variant={isSelected ? 'default' : 'outline'}
-                  className={cn('cursor-pointer flex items-center gap-1', depth > 0 && 'pl-1')}
-                  style={isSelected ? { backgroundColor: dept.color, color: 'white' } : undefined}
+                  variant="outline"
+                  className={cn(
+                    'cursor-pointer flex items-center gap-1 rounded-[2px] border-[rgba(64,66,77,0.55)] bg-transparent px-2 py-1 text-[11px] font-bold uppercase tracking-[0.3px] text-[#EDEFF7] transition-colors hover:bg-[#40424D]/40 hover:text-[#F2F2F2]',
+                    depth > 0 && 'pl-1',
+                    isSelected && 'border-transparent text-[#F2F2F2]'
+                  )}
+                  style={isSelected ? { backgroundColor: dept.color, color: '#F2F2F2' } : undefined}
                   onClick={() => handleDepartmentChange(isSelected ? null : dept.id)}
                 >
                   {depth > 0 && (
@@ -170,28 +172,30 @@ export function EmployeeSearch({
 
       <div className="space-y-2 h-full overflow-y-auto">
         {filteredProfiles.length === 0 ? (
-          <p className="text-center text-muted-foreground py-4">No employees found</p>
+          <p className="py-4 text-center text-[12px] font-semibold uppercase tracking-[0.3px] text-[#9DA2B3]">No employees found</p>
         ) : (
           filteredProfiles.map((profile) => (
             <div
               key={profile.id}
-              className="flex items-start gap-3 p-3 rounded-lg border hover:bg-accent cursor-pointer transition-colors"
+              className="flex items-start gap-3 rounded-[2px] border border-[rgba(64,66,77,0.45)] bg-[rgba(30,30,36,0.5)] p-3 cursor-pointer transition-colors hover:border-[rgba(64,66,77,0.7)] hover:bg-[rgba(65,65,65,0.5)]"
               onClick={() => onSelectEmployee(profile.id)}
             >
-              <Avatar className="shrink-0 mt-0.5">
+              <Avatar className="shrink-0 mt-0.5 h-10 w-10 bg-gradient-to-b from-[#5C5C5C] to-[#1F1F1F]">
                 {profile.profile_photo_url && (
                   <AvatarImage src={profile.profile_photo_url} alt={profile.full_name} />
                 )}
-                <AvatarFallback>{getInitials(profile.full_name)}</AvatarFallback>
+                <AvatarFallback className="bg-transparent text-[#F2F2F2] text-[11px] font-bold uppercase tracking-[0.3px]">
+                  {getInitials(profile.full_name)}
+                </AvatarFallback>
               </Avatar>
 
               <div className="flex-1 min-w-0">
-                <p className="font-medium truncate">{profile.full_name}</p>
-                <p className="text-sm text-muted-foreground truncate">{profile.job_title}</p>
+                <p className="truncate text-[15px] font-bold text-[#F2F2F2]">{profile.full_name}</p>
+                <p className="truncate text-[13px] text-[#9DA2B3]">{profile.job_title}</p>
                 {profile.department && (
                   <Badge
-                    className="mt-1 text-xs"
-                    style={{ backgroundColor: profile.department.color, color: 'white' }}
+                    className="mt-1 rounded-[2px] border-0 px-2 py-1 text-[11px] font-bold uppercase tracking-[0.3px] text-[#F2F2F2]"
+                    style={{ backgroundColor: profile.department.color, color: '#F2F2F2' }}
                   >
                     {profile.department.name}
                   </Badge>
