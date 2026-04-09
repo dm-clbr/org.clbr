@@ -9,11 +9,15 @@ export const PLATFORM_PRIMARY_NAV_ITEMS = [
   }
 ];
 
+function joinClassNames(...values) {
+  return values.filter(Boolean).join(" ");
+}
+
 export function PlatformShell({ shellClassName, sideNav, mainClassName, children }) {
   return React.createElement(
     "div",
-    { className: shellClassName },
-    React.createElement("aside", null, sideNav),
-    React.createElement("main", { className: mainClassName }, children)
+    { className: joinClassNames("platformShell", shellClassName) },
+    React.createElement("aside", { className: "platformShellAside" }, sideNav),
+    React.createElement("main", { className: joinClassNames("platformShellMain", mainClassName) }, children)
   );
 }

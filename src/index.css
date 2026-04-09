@@ -215,6 +215,305 @@ button {
   min-height: 100vh;
 }
 
+.platformShell {
+  width: 100%;
+}
+
+.platformShellMain {
+  min-width: 0;
+}
+
+.platformShellAside {
+  background: hsl(var(--card));
+  border-right: 1px solid hsl(var(--border));
+  box-sizing: border-box;
+  flex: 0 0 280px;
+  min-width: 280px;
+  max-width: 280px;
+  min-height: 100vh;
+}
+
+.platformSideNav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 0.9rem 0.7rem;
+  position: sticky;
+  top: 0;
+}
+
+.brandRow {
+  border-bottom: 1px solid hsl(var(--border));
+  margin-bottom: 0.5rem;
+  padding: 0.25rem 0.25rem 0.75rem;
+}
+
+.brandLink {
+  align-items: center;
+  border-radius: 0.75rem;
+  color: hsl(var(--foreground));
+  display: inline-flex;
+  font-size: 0.95rem;
+  font-weight: 600;
+  gap: 0.55rem;
+  min-height: 2.25rem;
+  padding: 0.25rem 0.45rem;
+  text-decoration: none;
+}
+
+.brandLink:hover {
+  background: hsl(var(--accent));
+}
+
+.brandWordmark {
+  height: 1.125rem;
+  width: auto;
+}
+
+.brandText {
+  letter-spacing: 0.08em;
+}
+
+.primaryNav,
+.utilityNav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.utilityNav {
+  border-top: 1px solid hsl(var(--border));
+  margin-top: 0.25rem;
+  padding-top: 0.75rem;
+}
+
+.navItem,
+.utilityItem {
+  align-items: center;
+  border-radius: 0.75rem;
+  color: hsl(var(--muted-foreground));
+  display: flex;
+  gap: 0.7rem;
+  min-height: 2.5rem;
+  padding: 0.6rem 0.65rem;
+  position: relative;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.navItem:focus-visible,
+.utilityItem:focus-visible,
+.profileLink:focus-visible,
+.profileLogoutButton:focus-visible,
+.brandLink:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+.navItem:hover,
+.utilityItem:hover {
+  background: hsl(var(--accent));
+  color: hsl(var(--foreground));
+}
+
+.navItem.active,
+.utilityItem.active {
+  background: radial-gradient(circle at right center, rgb(31 218 67 / 0.14), rgb(0 0 0 / 0) 74%);
+  color: hsl(var(--foreground));
+}
+
+.navItem.active::after,
+.utilityItem.active::after {
+  background: linear-gradient(180deg, rgb(106 255 139) 0%, rgb(31 218 67) 100%);
+  border-radius: 999px;
+  box-shadow: 0 0 12px rgb(31 218 67 / 0.45);
+  content: "";
+  height: calc(100% - 0.8rem);
+  position: absolute;
+  right: 0.35rem;
+  top: 0.4rem;
+  width: 0.2rem;
+}
+
+.navIcon {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 1.1rem;
+  height: 1.1rem;
+  justify-content: center;
+  width: 1.1rem;
+}
+
+.navIcon img {
+  display: block;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0.82;
+  filter: grayscale(1);
+  width: 100%;
+}
+
+.navItem:hover .navIcon img,
+.utilityItem:hover .navIcon img,
+.navItem.active .navIcon img,
+.utilityItem.active .navIcon img {
+  filter: none;
+  opacity: 1;
+}
+
+.navIconPlaceholder {
+  background: hsl(var(--muted));
+  border-radius: 999px;
+  opacity: 0.6;
+}
+
+.navLabel {
+  font-size: 0.93rem;
+  line-height: 1.2rem;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profileSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-top: auto;
+}
+
+.profileLink,
+.profileButton {
+  align-items: center;
+  background: transparent;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.9rem;
+  color: inherit;
+  display: flex;
+  gap: 0.65rem;
+  min-height: 3.1rem;
+  padding: 0.55rem 0.6rem;
+  position: relative;
+  text-align: left;
+  text-decoration: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.profileLink {
+  cursor: pointer;
+}
+
+.profileButton:hover {
+  background: hsl(var(--accent));
+  border-color: hsl(var(--ring));
+}
+
+.profileLink:hover {
+  background: hsl(var(--accent));
+  border-color: hsl(var(--ring));
+}
+
+.profileLink.active {
+  background: radial-gradient(circle at right center, rgb(31 218 67 / 0.14), rgb(0 0 0 / 0) 74%);
+  border-color: hsl(var(--ring));
+  color: hsl(var(--foreground));
+}
+
+.profileLink.active::after {
+  background: linear-gradient(180deg, rgb(106 255 139) 0%, rgb(31 218 67) 100%);
+  border-radius: 999px;
+  box-shadow: 0 0 12px rgb(31 218 67 / 0.45);
+  content: "";
+  height: calc(100% - 0.8rem);
+  position: absolute;
+  right: 0.35rem;
+  top: 0.4rem;
+  width: 0.2rem;
+}
+
+.profileButton:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.profileLogoutButton {
+  background: transparent;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.7rem;
+  color: hsl(var(--muted-foreground));
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  min-height: 2.15rem;
+  padding: 0.4rem 0.6rem;
+  text-align: center;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  width: 100%;
+}
+
+.profileLogoutButton:hover {
+  background: hsl(var(--accent));
+  border-color: hsl(var(--ring));
+  color: hsl(var(--foreground));
+}
+
+.profileLogoutButton:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.profileAvatar {
+  align-items: center;
+  background: hsl(var(--muted));
+  border-radius: 999px;
+  display: inline-flex;
+  flex: 0 0 2rem;
+  height: 2rem;
+  justify-content: center;
+  overflow: hidden;
+  width: 2rem;
+}
+
+.profileAvatarImage {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.profileInitials {
+  color: hsl(var(--foreground));
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.profileCopy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  min-width: 0;
+}
+
+.profileCopy strong {
+  color: hsl(var(--foreground));
+  font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profileCopy small {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* App-wide dark mode overrides for remaining hardcoded light utilities. */
 .dark {
   color-scheme: dark;
@@ -401,6 +700,21 @@ button {
 @media (max-width: 980px) {
   .org-layout-shell {
     flex-direction: column;
+  }
+
+  .platformShellAside {
+    border-right: 0;
+    border-bottom: 1px solid hsl(var(--border));
+    flex: 0 0 auto;
+    max-width: none;
+    min-height: auto;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .platformSideNav {
+    height: auto;
+    position: static;
   }
 
   .org-workspace {
