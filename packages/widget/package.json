@@ -1,0 +1,12 @@
+{
+  "name": "@ava/widget",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.js"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  }
+}

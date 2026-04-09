@@ -1,0 +1,13 @@
+{
+  "name": "@ava/ui",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./shell/platform-side-nav": "./shell/platform-side-nav.js"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  }
+}

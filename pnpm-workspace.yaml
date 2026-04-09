@@ -1,2 +1,3 @@
-overrides:
-  '@ava/config': link:../monoveyo/packages/config
+packages:
+  - .
+  - packages/*
