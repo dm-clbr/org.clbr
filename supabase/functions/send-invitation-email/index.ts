@@ -201,7 +201,7 @@ serve(async (req) => {
             body { font-family: Arial, sans-serif; line-height: 1.6; color: #111; background: #fff; margin: 0; padding: 0; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
             .header { background: #000; color: #fff; padding: 32px 30px; text-align: center; border-radius: 8px 8px 0 0; }
-            .header img { display: block; margin: 0 auto 16px; height: 48px; width: auto; }
+            .header img { display: block; margin: 0 auto 16px; height: auto; width: 180px; max-width: 100%; }
             .header h1 { margin: 0; font-size: 20px; font-weight: 600; }
             .content { background: #fff; padding: 30px; border: 1px solid #e5e5e5; border-top: none; border-radius: 0 0 8px 8px; }
             .button { display: inline-block; background: #000; color: #fff !important; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 20px 0; font-weight: bold; }
@@ -213,7 +213,7 @@ serve(async (req) => {
         <body>
           <div class="container">
             <div class="header">
-              <img src="${logoUrl}" alt="Organization logo" width="60" height="47" />
+              <img src="${logoUrl}" alt="CLBR" width="180" />
               <h1>You've been invited to CLBR Org Chart</h1>
             </div>
             <div class="content">
