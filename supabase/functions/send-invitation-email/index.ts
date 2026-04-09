@@ -34,8 +34,13 @@ function getBearerToken(req: Request): string | null {
   return token || null
 }
 
+function resolveAppUrl(): string {
+  const configured = Deno.env.get('APP_URL')?.trim() || Deno.env.get('SITE_URL')?.trim() || 'https://org.clbr.com'
+  return configured.replace(/\/+$/, '')
+}
+
 function sanitizeRedirectTo(raw: unknown): string {
-  const appUrl = (Deno.env.get('APP_URL') || 'https://org.clbr.com').replace(/\/+$/, '')
+  const appUrl = resolveAppUrl()
   const fallback = `${appUrl}/onboarding`
   if (typeof raw !== 'string' || !raw.trim()) return fallback
 
@@ -187,8 +192,8 @@ serve(async (req) => {
     // Use a hosted PNG logo for email client compatibility.
     // Gmail and most email clients block data: URIs and don't support SVG.
     // The white PNG version should be hosted at this URL.
-    const APP_URL = Deno.env.get('APP_URL') || 'https://org.clbr.com'
-    const logoUrl = `${APP_URL}/images/logo-white.png`
+    const appUrl = resolveAppUrl()
+    const logoUrl = `${appUrl}/images/logo-white.png`
 
     // Send email via Resend
     const emailHtml = `

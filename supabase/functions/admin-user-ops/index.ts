@@ -66,8 +66,13 @@ function normalizedEmail(raw: unknown): string | null {
   return email
 }
 
+function resolveAppUrl(): string {
+  const configured = Deno.env.get('APP_URL')?.trim() || Deno.env.get('SITE_URL')?.trim() || 'https://org.clbr.com'
+  return configured.replace(/\/+$/, '')
+}
+
 function sanitizeRedirectTo(raw: unknown, fallbackPath: string): string {
-  const appUrl = (Deno.env.get('APP_URL') || 'https://org.clbr.com').replace(/\/+$/, '')
+  const appUrl = resolveAppUrl()
   const fallback = `${appUrl}${fallbackPath}`
 
   if (typeof raw !== 'string' || !raw.trim()) {

@@ -149,13 +149,10 @@ export function useInviteEmployee() {
           }
         }
 
-        // Step 2: Send invitation email (edge function generates magic link server-side)
-        const appUrl = process.env.NEXT_PUBLIC_ORG_APP_URL || window.location.origin
+        // Step 2: Send invitation email (edge function generates magic link server-side
+        // using Supabase-configured app URL)
         console.log('useInviteEmployee: Sending invitation email')
-        const emailResult = await sendEmployeeInvitationEmail(
-          newUserId,
-          `${appUrl}/onboarding`
-        )
+        const emailResult = await sendEmployeeInvitationEmail(newUserId)
 
         if (!emailResult.success) {
           console.error('useInviteEmployee: Error sending email:', emailResult.error)

@@ -34,15 +34,12 @@ export function useResendInvite() {
       }
 
       try {
-        // Edge function handles server-side link generation and email dispatch.
-        const appUrl = process.env.NEXT_PUBLIC_ORG_APP_URL || window.location.origin
+        // Edge function handles server-side link generation and email dispatch
+        // using Supabase-configured app URL.
 
         // Send invitation email
         console.log('useResendInvite: Sending invitation email')
-        const emailResult = await sendEmployeeInvitationEmail(
-          profile.id,
-          `${appUrl}/onboarding`
-        )
+        const emailResult = await sendEmployeeInvitationEmail(profile.id)
 
         if (!emailResult.success) {
           console.error('useResendInvite: Error sending email:', emailResult.error)
