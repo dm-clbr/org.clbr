@@ -159,7 +159,7 @@ export async function invokeAdminUserOps<T = unknown>(body: Record<string, unkno
       error: {
         message: mapAdminErrorMessage(
           serverSession.code,
-          serverSession.error || serverSession.message || 'Session mismatch'
+          serverSession.error || 'Session mismatch'
         ),
         status: 401,
         code: serverSession.code,

@@ -22,24 +22,26 @@ function navButtonClassName(isActive) {
   return `navItem ${isActive ? "active" : ""}`.trim();
 }
 
-export function PlatformSideNav({
-  primaryItems = [],
-  utilityItems = [],
-  pathname = "/",
-  sameAppHrefByItemId,
-  renderLink = defaultRenderLink,
-  isPrimaryItemActive,
-  isUtilityItemActive,
-  profile,
-  brandAriaLabel = "Home",
-  resolveBrandHref
-}) {
+export function PlatformSideNav(props) {
+  const {
+    primaryItems = [],
+    utilityItems = [],
+    pathname = "/",
+    sameAppHrefByItemId,
+    renderLink,
+    isPrimaryItemActive,
+    isUtilityItemActive,
+    profile,
+    brandAriaLabel = "Home",
+    resolveBrandHref
+  } = props ?? {};
+  const renderLinkFn = typeof renderLink === "function" ? renderLink : defaultRenderLink;
   const brandHref = typeof resolveBrandHref === "function" ? resolveBrandHref() : "/";
 
   const primaryLinks = primaryItems.map((item) => {
     const href = toHref(item, sameAppHrefByItemId);
     const active = isPrimaryItemActive ? isPrimaryItemActive(item.id, pathname) : pathname === href;
-    return renderLink({
+    return renderLinkFn({
       key: `primary-${item.id}`,
       href,
       className: navButtonClassName(active),
@@ -52,7 +54,7 @@ export function PlatformSideNav({
   const utilityLinks = utilityItems.map((item) => {
     const href = toHref(item, sameAppHrefByItemId);
     const active = isUtilityItemActive ? isUtilityItemActive(item, pathname) : pathname === href;
-    return renderLink({
+    return renderLinkFn({
       key: `utility-${item.id}`,
       href,
       className: `utilityItem ${active ? "active" : ""}`.trim(),
@@ -68,7 +70,7 @@ export function PlatformSideNav({
     React.createElement(
       "div",
       { className: "brandRow" },
-      renderLink({
+      renderLinkFn({
         key: "brand-link",
         href: brandHref,
         className: "brandLink",
