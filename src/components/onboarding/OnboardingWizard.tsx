@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../../lib/supabase'
 import { Card, CardContent, CardHeader } from '../ui/card'
@@ -6,6 +6,7 @@ import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { JobDescriptionEditor } from '../ui/JobDescriptionEditor'
+import { PhotoUpload } from '../profile/PhotoUpload'
 import { CheckCircle2, User, Lock, FileText, AlertCircle } from 'lucide-react'
 import type { Profile } from '../../types'
 
@@ -29,6 +30,7 @@ export function OnboardingWizard({ profile, onComplete }: OnboardingWizardProps)
   const [jobDescription, setJobDescription] = useState(profile.job_description || '')
   const [phone, setPhone] = useState(profile.phone || '')
   const [location, setLocation] = useState(profile.location || '')
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState(profile.profile_photo_url || '')
   const [birthday, setBirthday] = useState(
     profile.birthday ? (typeof profile.birthday === 'string' && profile.birthday.length >= 10 ? profile.birthday.slice(0, 10) : '') : ''
   )
@@ -43,6 +45,10 @@ export function OnboardingWizard({ profile, onComplete }: OnboardingWizardProps)
   const infoCardClass = 'clbr-list-item rounded-[2px] p-3'
   const errorBoxClass =
     'flex items-start gap-2 rounded-[2px] border border-[rgba(64,66,77,0.55)] bg-[rgba(110,113,128,0.15)] p-3 text-sm text-[#D3D6E0]'
+
+  useEffect(() => {
+    setProfilePhotoUrl(profile.profile_photo_url || '')
+  }, [profile.profile_photo_url])
 
   const handleSetPassword = async () => {
     setError('')
@@ -76,11 +82,18 @@ export function OnboardingWizard({ profile, onComplete }: OnboardingWizardProps)
 
   const handleUpdateProfile = async () => {
     setError('')
+
+    if (!profilePhotoUrl) {
+      setError('Profile photo is required to complete onboarding.')
+      return
+    }
+
     setLoading(true)
     try {
       const { error: updateError } = await supabase
         .from('profiles')
         .update({
+          profile_photo_url: profilePhotoUrl,
           preferred_name: preferredName || null,
           job_description: jobDescription || null,
           phone: phone || null,
@@ -233,11 +246,26 @@ export function OnboardingWizard({ profile, onComplete }: OnboardingWizardProps)
               </div>
               <h2 className="mb-2 text-2xl font-black uppercase tracking-[0.3px] text-[#F2F2F2]">Complete Your Profile</h2>
               <p className="text-sm text-[#9DA2B3]">
-                Help your team get to know you better (optional).
+                Upload your profile photo (required), then add any optional details.
               </p>
             </div>
 
             <div className="space-y-4">
+              <div className="space-y-2">
+                <Label className={labelClass}>Profile Photo *</Label>
+                <div className="clbr-list-item rounded-[2px] p-4">
+                  <PhotoUpload
+                    currentPhotoUrl={profilePhotoUrl || null}
+                    userName={profile.full_name}
+                    userId={profile.id}
+                    onPhotoUploaded={setProfilePhotoUrl}
+                  />
+                </div>
+                {!profilePhotoUrl && (
+                  <p className={helperTextClass}>A profile photo is required to complete onboarding.</p>
+                )}
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="preferredName" className={labelClass}>Nickname / Preferred Name (Optional)</Label>
                 <Input
@@ -342,10 +370,10 @@ export function OnboardingWizard({ profile, onComplete }: OnboardingWizardProps)
               <Button
                 type="button"
                 onClick={handleUpdateProfile}
-                disabled={loading}
+                disabled={loading || !profilePhotoUrl}
                 className="clbr-btn-primary flex-1"
               >
-                {loading ? 'Saving...' : 'Complete Setup'}
+                {loading ? 'Saving...' : profilePhotoUrl ? 'Complete Setup' : 'Add Photo to Continue'}
               </Button>
             </div>
           </div>
@@ -373,7 +401,7 @@ export function OnboardingWizard({ profile, onComplete }: OnboardingWizardProps)
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 text-[#D3D6E0]" />
-                  <span>Upload a profile photo</span>
+                  <span>Keep your profile details up to date</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 text-[#D3D6E0]" />

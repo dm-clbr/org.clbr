@@ -22,6 +22,7 @@ export function PhotoUpload({ currentPhotoUrl, userName, userId, onPhotoUploaded
   const [showCropDialog, setShowCropDialog] = useState(false)
   const [imageToCrop, setImageToCrop] = useState<string | null>(null)
   const [showEditMenu, setShowEditMenu] = useState(false)
+  const [isDragOver, setIsDragOver] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -61,8 +62,7 @@ export function PhotoUpload({ currentPhotoUrl, userName, userId, onPhotoUploaded
     }
   }
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+  const prepareFileForCrop = (file: File | undefined | null) => {
     if (!file) return
 
     if (!file.type.startsWith('image/')) {
@@ -91,6 +91,34 @@ export function PhotoUpload({ currentPhotoUrl, userName, userId, onPhotoUploaded
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    prepareFileForCrop(e.target.files?.[0])
+  }
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    if (uploading || compressing) return
+    e.preventDefault()
+    e.stopPropagation()
+    if (!isDragOver) {
+      setIsDragOver(true)
+    }
+  }
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragOver(false)
+  }
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    if (uploading || compressing) return
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragOver(false)
+    setShowEditMenu(false)
+    prepareFileForCrop(e.dataTransfer.files?.[0])
   }
 
   const handleCropComplete = async (croppedFile: File) => {
@@ -126,7 +154,15 @@ export function PhotoUpload({ currentPhotoUrl, userName, userId, onPhotoUploaded
 
   return (
     <div className={isSmall ? 'flex flex-col items-center gap-1' : 'flex flex-col items-center gap-4'}>
-      <div className="relative" ref={menuRef}>
+      <div
+        className={`relative rounded-full transition-shadow ${
+          isDragOver ? 'shadow-[0_0_0_3px_rgba(211,214,224,0.5)]' : ''
+        }`}
+        ref={menuRef}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
         <Avatar className={isSmall ? 'h-[60px] w-[60px] bg-gradient-to-b from-[#5C5C5C] to-[#1F1F1F]' : 'h-32 w-32 bg-gradient-to-b from-[#5C5C5C] to-[#1F1F1F]'}>
           {currentPhotoUrl && (
             <AvatarImage src={currentPhotoUrl} alt={userName} />
@@ -181,12 +217,22 @@ export function PhotoUpload({ currentPhotoUrl, userName, userId, onPhotoUploaded
         disabled={uploading || compressing}
       />
 
-      {!isSmall && compressing && (
-        <p className="text-sm text-[#9DA2B3]">Compressing image...</p>
+      {compressing && (
+        <p className={isSmall ? 'text-[10px] text-[#9DA2B3]' : 'text-sm text-[#9DA2B3]'}>
+          Compressing image...
+        </p>
       )}
 
-      {!isSmall && uploading && (
-        <p className="text-sm text-[#9DA2B3]">Uploading...</p>
+      {uploading && (
+        <p className={isSmall ? 'text-[10px] text-[#9DA2B3]' : 'text-sm text-[#9DA2B3]'}>
+          Uploading...
+        </p>
+      )}
+
+      {!uploading && !compressing && (
+        <p className={isSmall ? 'max-w-[96px] text-center text-[10px] text-[#9DA2B3]' : 'text-xs text-[#9DA2B3]'}>
+          Drag and drop an image here, or click the camera icon.
+        </p>
       )}
 
       {error && (
