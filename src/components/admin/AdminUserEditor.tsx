@@ -55,20 +55,24 @@ export function AdminUserEditor({ profile, onSaved, onCancel }: AdminUserEditorP
     setDepartmentAutoFilled(false)
   }, [profile])
 
-  // Auto-update department when manager changes
-  useEffect(() => {
-    if (formData.manager_id && profiles) {
-      const selectedManager = profiles.find(p => p.id === formData.manager_id)
-      if (selectedManager?.department_id && selectedManager.department_id !== formData.department_id) {
-        setFormData(prev => ({ ...prev, department_id: selectedManager.department_id || '' }))
-        setDepartmentAutoFilled(true)
-      }
-    }
-  }, [formData.manager_id, formData.department_id, profiles])
-
   const handleManagerChange = (value: string) => {
-    setFormData(prev => ({ ...prev, manager_id: value }))
-    setDepartmentAutoFilled(false)
+    if (!value) {
+      setFormData(prev => ({ ...prev, manager_id: '' }))
+      setDepartmentAutoFilled(false)
+      return
+    }
+
+    const selectedManager = profiles?.find((p) => p.id === value)
+    const managerDepartmentId = selectedManager?.department_id || ''
+
+    setFormData(prev => ({
+      ...prev,
+      manager_id: value,
+      // Use manager department as the default only when manager changes.
+      // Users can still manually override department/sub-department afterward.
+      department_id: managerDepartmentId || prev.department_id,
+    }))
+    setDepartmentAutoFilled(Boolean(managerDepartmentId))
   }
 
   const handleDepartmentChange = (value: string) => {

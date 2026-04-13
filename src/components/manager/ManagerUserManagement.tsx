@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { useProfiles, useUpdateProfile, useProfileBranch } from '../../hooks/useProfile'
 import { useDepartments } from '../../lib/queries'
 import { useUserAuthStatus, useResendInvite, hasUserLoggedIn } from '../../hooks/useResendInvite'
@@ -13,8 +13,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Badge } from '../ui/badge'
 import { getInitials } from '../../lib/utils'
-import { Edit2, Loader2, UserPlus, Info, Mail, Clock } from 'lucide-react'
+import { Edit2, Loader2, UserPlus, Mail, Clock } from 'lucide-react'
 import { ManagerAddEmployeeDialog } from './ManagerAddEmployeeDialog'
+import { CascadingDepartmentSelect } from '../admin/CascadingDepartmentSelect'
 
 export function ManagerUserManagement() {
   const { data: allProfiles, isLoading } = useProfiles()
@@ -60,16 +61,25 @@ export function ManagerUserManagement() {
     })
   }
 
-  // Auto-update department when manager changes (though manager shouldn't change for managers)
-  useEffect(() => {
-    if (editingUser && formData.manager_id && allProfiles) {
-      const selectedManager = allProfiles.find(p => p.id === formData.manager_id)
-      if (selectedManager?.department_id && selectedManager.department_id !== formData.department_id) {
-        setFormData(prev => ({ ...prev, department_id: selectedManager.department_id || '' }))
-        setDepartmentAutoFilled(true)
-      }
+  const handleManagerChange = (value: string) => {
+    if (!value) {
+      setFormData(prev => ({ ...prev, manager_id: '' }))
+      setDepartmentAutoFilled(false)
+      return
     }
-  }, [formData.manager_id, formData.department_id, allProfiles, editingUser])
+
+    const selectedManager = allProfiles?.find((p) => p.id === value)
+    const managerDepartmentId = selectedManager?.department_id || ''
+
+    setFormData(prev => ({
+      ...prev,
+      manager_id: value,
+      // Use manager department as the default only when manager changes.
+      // Users can still manually override department/sub-department afterward.
+      department_id: managerDepartmentId || prev.department_id,
+    }))
+    setDepartmentAutoFilled(Boolean(managerDepartmentId))
+  }
 
   const handleDepartmentChange = (value: string) => {
     setFormData(prev => ({ ...prev, department_id: value }))
@@ -173,7 +183,7 @@ export function ManagerUserManagement() {
                   <select
                     id="manager"
                     value={formData.manager_id}
-                    onChange={(e) => setFormData(prev => ({ ...prev, manager_id: e.target.value }))}
+                    onChange={(e) => handleManagerChange(e.target.value)}
                     disabled={updateProfile.isPending}
                     className="clbr-select flex h-10 w-full px-3 py-2 text-sm"
                   >
@@ -200,31 +210,13 @@ export function ManagerUserManagement() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="department" className="clbr-label">
-                  Department
-                  {departmentAutoFilled && (
-                    <span className="ml-2 text-xs text-[#9DA2B3] normal-case tracking-normal">(auto-updated from manager)</span>
-                  )}
-                </Label>
-                <select
-                  id="department"
+                <CascadingDepartmentSelect
+                  departments={departments || []}
                   value={formData.department_id}
-                  onChange={(e) => handleDepartmentChange(e.target.value)}
-                  className="clbr-select flex h-10 w-full px-3 py-2 text-sm"
-                >
-                  <option value="">No Department</option>
-                  {departments?.map((dept) => (
-                    <option key={dept.id} value={dept.id}>
-                      {dept.name}
-                    </option>
-                  ))}
-                </select>
-                {departmentAutoFilled && (
-                  <div className="flex items-start gap-2 text-xs text-[#9DA2B3]">
-                    <Info className="h-3 w-3 mt-0.5 flex-shrink-0" />
-                    <span>Department automatically updated from manager. You can change it if needed.</span>
-                  </div>
-                )}
+                  onChange={handleDepartmentChange}
+                  disabled={updateProfile.isPending}
+                  autoFilledNote={departmentAutoFilled ? '(auto-updated from manager)' : undefined}
+                />
               </div>
 
               <div className="space-y-2">
