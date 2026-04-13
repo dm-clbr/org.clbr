@@ -11,6 +11,26 @@ function snapToGrid(value: number): number {
   return Math.round(value / SLOT_WIDTH) * SLOT_WIDTH
 }
 
+function findNearestOpenSlot(desiredX: number, occupiedSlots: Set<number>): number {
+  if (!occupiedSlots.has(desiredX)) {
+    return desiredX
+  }
+
+  for (let offset = 1; offset < 200; offset += 1) {
+    const left = desiredX - offset * SLOT_WIDTH
+    if (!occupiedSlots.has(left)) {
+      return left
+    }
+
+    const right = desiredX + offset * SLOT_WIDTH
+    if (!occupiedSlots.has(right)) {
+      return right
+    }
+  }
+
+  return desiredX
+}
+
 export function useOrgChart(
   profiles: OrgChartProfile[],
   isAdmin: boolean, 
@@ -99,8 +119,8 @@ export function useOrgChart(
 
     // Apply calculated positions to nodes (dagre returns center coords, ReactFlow uses top-left)
     // If a saved position exists, use its X coordinate but keep dagre's Y (to preserve hierarchy)
-    // All X positions are snapped to grid for consistency
-    return nodes.map((node) => {
+    // All X positions are snapped to grid for consistency.
+    const positionedNodes = nodes.map((node) => {
       const nodeWithPosition = dagreGraph.node(node.id)
       const dagrePos = {
         x: snapToGrid(nodeWithPosition.x - NODE_WIDTH / 2),
@@ -114,6 +134,29 @@ export function useOrgChart(
         position: savedPos
           ? { x: savedPos.x, y: dagrePos.y } // Use saved X (already snapped), dagre Y
           : dagrePos, // Use dagre (X already snapped) for both if no saved position
+      }
+    })
+
+    // Enforce a strict no-overlap rule per row by guaranteeing unique X slots.
+    const rowSlots = new Map<string, Set<number>>()
+    return positionedNodes.map((node) => {
+      const rowKey = String(Math.round(node.position.y))
+      const occupied = rowSlots.get(rowKey) ?? new Set<number>()
+      const desiredX = snapToGrid(node.position.x)
+      const resolvedX = findNearestOpenSlot(desiredX, occupied)
+      occupied.add(resolvedX)
+      rowSlots.set(rowKey, occupied)
+
+      if (resolvedX === node.position.x) {
+        return node
+      }
+
+      return {
+        ...node,
+        position: {
+          ...node.position,
+          x: resolvedX,
+        },
       }
     })
   }, [nodes, edges, savedPositions])

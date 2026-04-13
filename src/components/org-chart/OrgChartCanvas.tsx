@@ -82,6 +82,27 @@ function OrgChartCanvasInner({
 
   // Constants for grid snapping
   const SLOT_WIDTH = 320 // 220px node width + 100px gap (matches dagre nodesep)
+  const snapToGrid = useCallback((value: number) => Math.round(value / SLOT_WIDTH) * SLOT_WIDTH, [SLOT_WIDTH])
+
+  const findNearestOpenSlot = useCallback((desiredX: number, occupiedSlots: Set<number>): number => {
+    if (!occupiedSlots.has(desiredX)) {
+      return desiredX
+    }
+
+    for (let offset = 1; offset < 200; offset += 1) {
+      const left = desiredX - offset * SLOT_WIDTH
+      if (!occupiedSlots.has(left)) {
+        return left
+      }
+
+      const right = desiredX + offset * SLOT_WIDTH
+      if (!occupiedSlots.has(right)) {
+        return right
+      }
+    }
+
+    return desiredX
+  }, [SLOT_WIDTH])
 
   // Update nodes when profiles change
   useEffect(() => {
@@ -194,7 +215,7 @@ function OrgChartCanvasInner({
     [isAdmin]
   )
 
-  // Handler when drag stops - snap to grid and handle swapping
+  // Handler when drag stops - snap to grid and enforce no-overlap slots
   const handleNodeDragStop = useCallback(
     async (_event: React.MouseEvent, node: any) => {
       if (!isAdmin) return
@@ -203,28 +224,29 @@ function OrgChartCanvasInner({
       if (fixedY === undefined) return
 
       // Snap X to nearest slot
-      const snappedX = Math.round(node.position.x / SLOT_WIDTH) * SLOT_WIDTH
+      const snappedX = snapToGrid(node.position.x)
+      const dragStart = dragStartPositions.current[node.id]
+      const startSnappedX = dragStart ? snapToGrid(dragStart.x) : snappedX
 
-      // Find if there's a sibling at the target position (within tolerance)
+      // Find siblings in the same row and reserve occupied slots.
       const siblings = nodesRef.current.filter(
         (n) => n.id !== node.id && Math.abs(n.position.y - fixedY) < 5
       )
+      const occupiedSlots = new Set<number>(siblings.map((s) => snapToGrid(s.position.x)))
 
       const collision = siblings.find(
-        (sibling) => Math.abs(sibling.position.x - snappedX) < 5
+        (sibling) => snapToGrid(sibling.position.x) === snappedX
       )
 
-      if (collision && dragStartPositions.current[node.id]) {
+      if (collision && dragStart && !occupiedSlots.has(startSnappedX)) {
         // Swap positions
-        const oldPosition = dragStartPositions.current[node.id]
-
         setNodes((nds) =>
           nds.map((n) => {
             if (n.id === node.id) {
               return { ...n, position: { x: snappedX, y: fixedY } }
             }
             if (n.id === collision.id) {
-              return { ...n, position: { x: oldPosition.x, y: fixedY } }
+              return { ...n, position: { x: startSnappedX, y: fixedY } }
             }
             return n
           })
@@ -240,32 +262,37 @@ function OrgChartCanvasInner({
             }),
             updatePosition.mutateAsync({
               profile_id: collision.id,
-              x_position: oldPosition.x,
+              x_position: startSnappedX,
               y_position: fixedY,
             }),
           ])
         } catch (error) {
           console.error('Failed to save swapped positions:', error)
         }
-      } else {
-        // No collision, just snap to grid
-        setNodes((nds) =>
-          nds.map((n) => {
-            if (n.id === node.id) {
-              return { ...n, position: { x: snappedX, y: fixedY } }
-            }
-            return n
-          })
-        )
-
-        updatePosition.mutate({
-          profile_id: node.id,
-          x_position: snappedX,
-          y_position: fixedY,
-        })
+        delete dragStartPositions.current[node.id]
+        return
       }
+
+      // If target slot is taken and swap is not possible, place at nearest open slot.
+      const resolvedX = collision ? findNearestOpenSlot(snappedX, occupiedSlots) : snappedX
+
+      setNodes((nds) =>
+        nds.map((n) => {
+          if (n.id === node.id) {
+            return { ...n, position: { x: resolvedX, y: fixedY } }
+          }
+          return n
+        })
+      )
+
+      updatePosition.mutate({
+        profile_id: node.id,
+        x_position: resolvedX,
+        y_position: fixedY,
+      })
+      delete dragStartPositions.current[node.id]
     },
-    [isAdmin, updatePosition, setNodes]
+    [isAdmin, updatePosition, setNodes, snapToGrid, findNearestOpenSlot]
   )
 
   const handleNodeClick = useCallback(
@@ -283,7 +310,7 @@ function OrgChartCanvasInner({
         
         // Then save all current node positions, snapped to grid
         const positions = nodesRef.current.map((node) => {
-          const snappedX = Math.round(node.position.x / SLOT_WIDTH) * SLOT_WIDTH
+          const snappedX = snapToGrid(node.position.x)
           return {
             profile_id: node.id,
             x_position: snappedX,
@@ -296,7 +323,7 @@ function OrgChartCanvasInner({
         console.error('Failed to save clean layout:', error)
       }
     }
-  }, [clearAllPositions, batchSavePositions])
+  }, [clearAllPositions, batchSavePositions, snapToGrid])
 
   return (
     <div className="w-full h-full">
